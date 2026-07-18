@@ -21,6 +21,7 @@ How trust is manufactured:
 ## Details
 - App: https://app.pactaprotocol.org/
 - Source: https://github.com/Pacta-Protocol
+- Roadmap (real registry adapters, production hardening, settlement modules): https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/ROADMAP.md
 - Example app (LandBridge, cross-border real estate on the MCP surface): https://github.com/Pacta-Protocol/Pacta.Example.RealEstate
 - Example app (MedVoyage, a Sentient ROMA agent forming a medical-tourism company in Colombia over the same MCP surface): https://github.com/Pacta-Protocol/Pacta.Example.RomaBuyer
 - Contact: hello@pactaprotocol.org
