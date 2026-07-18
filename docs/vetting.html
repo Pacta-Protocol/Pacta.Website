@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Game Theory of Vetting - Pacta Protocol Docs</title>
+  <meta name="description" content="Why Pacta's Vetted badge needs no verification department: staked collateral, graduated exposure caps and slashing make honesty the most profitable strategy.">
+  <link rel="canonical" href="https://pactaprotocol.org/docs/vetting.html">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/site.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://pactaprotocol.org/" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://pactaprotocol.org/docs/index.html" },
+      { "@type": "ListItem", "position": 3, "name": "The game theory of vetting", "item": "https://pactaprotocol.org/docs/vetting.html" }
+    ]
+  }
+  </script>
+</head>
+<body data-lang="en">
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/index.html" aria-label="Pacta Protocol">
+      <svg viewBox="0 0 100 106" fill="none" stroke="currentColor" stroke-width="8.5" stroke-linecap="butt" stroke-linejoin="round" aria-hidden="true">
+        <path d="M31.5 21 V12 Q31.5 6 37.5 6 H86.5 Q92.5 6 92.5 12 V51 Q92.5 57 86.5 57 H77"/>
+        <path d="M58 57 H37.5 Q31.5 57 31.5 51 V33"/>
+        <path d="M11.5 27 H60.5 Q66.5 27 66.5 33 V72 Q66.5 78 60.5 78 H11.5 Q5.5 78 5.5 72 V33 Q5.5 27 11.5 27 Z"/>
+        <path d="M5.5 76 V102"/>
+      </svg>
+      <span class="brand-word">Pacta<span class="sub">&nbsp;Protocol</span></span>
+    </a>
+    <nav class="nav-links">
+      <a href="/index.html#how"><span lang="en">How it works</span><span lang="es">Cómo funciona</span></a>
+      <a href="/index.html#agents"><span lang="en">For agents (MCP)</span><span lang="es">Para agentes (MCP)</span></a>
+      <a href="/docs/index.html">Docs</a>
+      <a href="/docs/faq.html">FAQ</a>
+    </nav>
+    <div class="nav-right">
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button type="button" data-set-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-set-lang="es" aria-pressed="false">ES</button>
+      </div>
+      <a class="btn btn-primary" href="https://app.pactaprotocol.org/" target="_blank" rel="noopener"><span lang="en">Try Pacta</span><span lang="es">Prueba Pacta</span></a>
+    </div>
+  </div>
+</header>
+
+<div class="docs-layout">
+  <aside class="docs-side">
+    <p class="kicker"><span lang="en">Documentation</span><span lang="es">Documentación</span></p>
+    <nav>
+      <a href="/docs/index.html"><span lang="en">Getting started</span><span lang="es">Primeros pasos</span></a>
+      <a href="/docs/mcp.html"><span lang="en">MCP integration</span><span lang="es">Integración MCP</span></a>
+      <a href="/docs/vetting.html" aria-current="page"><span lang="en">Vetting game theory</span><span lang="es">Teoría de juegos</span></a>
+      <a href="/docs/faq.html">FAQ</a>
+    </nav>
+  </aside>
+
+  <main class="docs-content">
+    <p class="crumbs"><a href="/index.html"><span lang="en">Home</span><span lang="es">Inicio</span></a><span>/</span><a href="/docs/index.html">Docs</a><span>/</span><span lang="en">Vetting game theory</span><span lang="es">Teoría de juegos</span></p>
+    <p class="eyebrow"><span lang="en">Trust model</span><span lang="es">Modelo de confianza</span></p>
+    <h1 lang="en">The game theory of vetting</h1>
+    <h1 lang="es">La teoría de juegos del vetting</h1>
+    <p class="lede" lang="en">Most marketplaces buy trust with headcount: a verification department. Pacta's "Vetted" badge has no department behind it. This page explains the mechanism that replaces it, and why cheating it does not pay.</p>
+    <p class="lede" lang="es">La mayoría de los marketplaces compran confianza con personal: un departamento de verificación. La insignia "Verificado" de Pacta no tiene un departamento detrás. Esta página explica el mecanismo que lo reemplaza, y por qué hacerle trampa no paga.</p>
+
+    <div class="note" lang="en"><strong>The golden rule of the design:</strong> cheating must never be profitable. Pacta does not verify that a provider is honest; it makes honesty the most profitable strategy, and lets self-interest do the enforcement.</div>
+    <div class="note" lang="es"><strong>La regla de oro del diseño:</strong> hacer trampa nunca debe ser rentable. Pacta no verifica que un proveedor sea honesto; hace que la honestidad sea su estrategia más rentable, y deja que el interés propio la haga cumplir.</div>
+
+    <h2><span lang="en">The mechanism, live today</span><span lang="es">El mecanismo, en producción hoy</span></h2>
+    <p lang="en">Four pieces, enforced by the protocol on every request. Together they turn the badge from an opinion into a position.</p>
+    <p lang="es">Cuatro piezas, impuestas por el protocolo en cada petición. Juntas convierten la insignia de una opinión en una posición.</p>
+
+    <div class="grid-2">
+      <div class="card card-accent">
+        <h3><span lang="en">1 · Stake: the badge is capital at risk</span><span lang="es">1 · Colateral: la insignia es capital en riesgo</span></h3>
+        <p lang="en">A provider posts a real deposit, and the badge holds exactly while that stake is above zero. "Vetted" does not mean "someone reviewed this business"; it means "it has its own money bet on its performance."</p>
+        <p lang="es">El proveedor deposita una garantía real, y la insignia se sostiene exactamente mientras ese colateral sea mayor que cero. "Verificado" no significa "alguien revisó este negocio"; significa "tiene su propio dinero apostado a su desempeño".</p>
+      </div>
+      <div class="card card-accent">
+        <h3><span lang="en">2 · Graduated exposure: a credit limit for trust</span><span lang="es">2 · Exposición graduada: un límite de crédito para la confianza</span></h3>
+        <p lang="en">The total value a provider may hold in open engagements is capped:</p>
+        <p lang="es">El valor total que un proveedor puede sostener en engagements abiertos está limitado:</p>
+        <pre><code>cap = 5 × stake + 50% × settled volume</code></pre>
+        <p lang="en">A newcomer can only take small jobs; large contracts are earned with stake or settled history.</p>
+        <p lang="es">Un recién llegado solo puede tomar trabajos pequeños; los contratos grandes se ganan con colateral o historial liquidado.</p>
+      </div>
+      <div class="card card-accent">
+        <h3><span lang="en">3 · Slashing: losing a dispute costs the stake</span><span lang="es">3 · Slashing: perder una disputa cuesta colateral</span></h3>
+        <p lang="en">An adverse ruling pays the buyer out of the stake: <span class="money">20%</span> of the price on a full refund, <span class="money">10%</span> on a split, bounded by the stake that remains. A stake at <span class="money">$0</span> revokes the badge automatically.</p>
+        <p lang="es">Un fallo adverso compensa al comprador desde el colateral: <span class="money">20%</span> del precio en un reembolso total, <span class="money">10%</span> en una división, acotado por el colateral restante. Un colateral en <span class="money">$0</span> revoca la insignia automáticamente.</p>
+      </div>
+      <div class="card card-accent">
+        <h3><span lang="en">4 · Reputation you cannot buy in bulk</span><span lang="es">4 · Reputación que no se compra al por mayor</span></h3>
+        <p lang="en">Ratings exist only attached to settled engagements: one per engagement, after real money moved through escrow. Reputation is priced in settled volume, and it outranks price in search.</p>
+        <p lang="es">Las calificaciones solo existen atadas a engagements liquidados: una por engagement, después de que dinero real pasó por la garantía. La reputación se tasa en volumen liquidado, y pesa más que el precio en la búsqueda.</p>
+      </div>
+    </div>
+
+    <h2><span lang="en">The inequality that holds it up</span><span lang="es">La desigualdad que lo sostiene</span></h2>
+    <p lang="en">For a rational provider, cheating pays only if the loot beats everything it forfeits. The mechanism keeps that comparison permanently lopsided:</p>
+    <p lang="es">Para un proveedor racional, la trampa paga solo si el botín supera todo lo que pierde. El mecanismo mantiene esa comparación permanentemente desbalanceada:</p>
+<pre><code>maximum loot   &lt;   slashed stake + future earnings forfeited
+(bounded by the cap)      (grows with every settled engagement)</code></pre>
+    <p lang="en">The left side cannot outgrow the exposure cap. The right side only grows: every settled engagement raises the cap, the ranking, and the future contracts a slashed identity would forfeit.</p>
+    <p lang="es">El lado izquierdo no puede crecer más que el tope de exposición. El lado derecho solo crece: cada engagement liquidado sube el tope, el ranking y los contratos futuros que una identidad recortada perdería.</p>
+    <p lang="en"><strong>The more successful a provider becomes, the more irrational cheating gets.</strong> In repeated games, honesty is the dominant strategy - and it gets more dominant with tenure.</p>
+    <p lang="es"><strong>Cuanto más exitoso se vuelve un proveedor, más irracional se vuelve hacer trampa.</strong> En juegos repetidos, la honestidad es la estrategia dominante - y se vuelve más dominante con la antigüedad.</p>
+
+    <h2><span lang="en">Why the obvious attacks do not pay</span><span lang="es">Por qué los ataques obvios no pagan</span></h2>
+    <div class="table-scroll">
+      <table class="ref">
+        <thead>
+          <tr>
+            <th><span lang="en">Attack</span><span lang="es">Ataque</span></th>
+            <th><span lang="en">Why it loses money</span><span lang="es">Por qué pierde dinero</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span lang="en">Cheat and disappear</span><span lang="es">Hacer trampa y desaparecer</span></td>
+            <td><span lang="en">The loot is capped; the exit forfeits the stake plus every future contract the identity would have earned.</span><span lang="es">El botín está acotado; la salida cuesta el colateral más todos los contratos futuros que esa identidad habría ganado.</span></td>
+          </tr>
+          <tr>
+            <td><span lang="en">Fresh identities (Sybil)</span><span lang="es">Identidades nuevas (Sybil)</span></td>
+            <td><span lang="en">Each new identity needs fresh stake and starts at the minimum cap: a subscription fee for tiny loot.</span><span lang="es">Cada identidad nueva necesita colateral fresco y arranca en el tope mínimo: una cuota de suscripción por botines diminutos.</span></td>
+          </tr>
+          <tr>
+            <td><span lang="en">Farming reputation with fake sales</span><span lang="es">Inflar reputación con ventas falsas</span></td>
+            <td><span lang="en">A rating requires a settled engagement with real escrowed money: buying reputation means paying full settlement on fictitious volume, while the cap grows slowly.</span><span lang="es">Una calificación exige un engagement liquidado con dinero real en garantía: comprar reputación es pagar la liquidación completa de volumen ficticio, mientras el tope crece lento.</span></td>
+          </tr>
+          <tr>
+            <td><span lang="en">Faking the proof itself</span><span lang="es">Falsificar la prueba misma</span></td>
+            <td><span lang="en">Registry-anchored steps only accept references that exist in the official registry and match the required kind - and the buyer re-verifies before paying. A fabricated reference is caught twice.</span><span lang="es">Los pasos anclados a registro solo aceptan referencias que existen en el registro oficial y coinciden con el tipo requerido - y el comprador reverifica antes de pagar. Una referencia inventada se atrapa dos veces.</span></td>
+          </tr>
+          <tr>
+            <td><span lang="en">Disputing everything (abusive buyer)</span><span lang="es">Disputarlo todo (comprador abusivo)</span></td>
+            <td><span lang="en">Slashing follows only an adverse ruling by the neutral arbiter, never the accusation - and lost disputes follow the buyer's record too.</span><span lang="es">El slashing solo sigue a un fallo adverso del árbitro neutral, nunca a la acusación - y las disputas perdidas también siguen al historial del comprador.</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2><span lang="en">Designed, not yet wired in</span><span lang="es">Diseñado, aún no implementado</span></h2>
+    <p lang="en">Three extensions of the same logic, on the roadmap. Described here as design, not shipped features.</p>
+    <p lang="es">Tres extensiones de la misma lógica, en el roadmap. Descritas aquí como diseño, no como funcionalidad publicada.</p>
+    <div class="grid-3">
+      <div class="card">
+        <h3><span lang="en">Vouching with skin in the game</span><span lang="es">Aval con piel en el juego</span></h3>
+        <p lang="en">An established provider vouches for a newcomer by committing part of its own stake: if the newcomer fails, the voucher pays a share. Nobody vouches for strangers with their own money, so the vouching graph reproduces real trust networks with no central verifier.</p>
+        <p lang="es">Un proveedor establecido avala a un nuevo comprometiendo parte de su propio colateral: si el nuevo falla, el avalista paga una parte. Nadie avala a desconocidos con su propio dinero, así que el grafo de avales reproduce las redes de confianza reales sin verificador central.</p>
+      </div>
+      <div class="card">
+        <h3><span lang="en">Loser-pays arbitration</span><span lang="es">Arbitraje donde el que pierde paga</span></h3>
+        <p lang="en">Charging arbitration to whoever loses disciplines both sides: providers stop shipping garbage, buyers stop disputing frivolously, and both prefer settling. The arbiter becomes the exception.</p>
+        <p lang="es">Cobrar el arbitraje a quien pierde disciplina a ambos lados: los proveedores dejan de entregar basura, los compradores dejan de disputar frívolamente, y ambos prefieren el acuerdo. El árbitro se vuelve la excepción.</p>
+      </div>
+      <div class="card">
+        <h3><span lang="en">A staked jury instead of a human arbiter</span><span lang="es">Un jurado con colateral en vez de árbitro humano</span></h3>
+        <p lang="en">Jurors post stake and vote on the evidence: voting with the majority earns fees, against it costs stake (a Schelling-point design, Kleros-style). It works because Pacta's proofs anchor to objective public records.</p>
+        <p lang="es">Los jurados depositan colateral y votan sobre la evidencia: votar con la mayoría gana comisiones, contra ella cuesta colateral (un diseño de punto de Schelling, estilo Kleros). Funciona porque las pruebas de Pacta se anclan a registros públicos objetivos.</p>
+      </div>
+    </div>
+
+    <h2><span lang="en">What still needs humans</span><span lang="es">Qué sigue necesitando humanos</span></h2>
+    <p lang="en">The mechanism removes the verification department, not judgment: defining acceptance criteria per category, arbitrating grey cases while the staked jury is not built, and calibrating the constants against real market data.</p>
+    <p lang="es">El mecanismo elimina el departamento de verificación, no el juicio: definir criterios de aceptación por categoría, arbitrar los casos grises mientras no exista el jurado con colateral, y calibrar las constantes con datos reales del mercado.</p>
+
+    <div class="note" lang="en">The system does not promise zero fraud. It promises something more defensible: <strong>structurally unprofitable fraud</strong>, enforced by arithmetic rather than staff - so the cost of trust does not grow with the number of providers.</div>
+    <div class="note" lang="es">El sistema no promete cero fraude. Promete algo más defendible: <strong>fraude estructuralmente no rentable</strong>, impuesto por aritmética y no por personal - de modo que el costo de la confianza no crece con el número de proveedores.</div>
+
+    <h2><span lang="en">See it in the code</span><span lang="es">Míralo en el código</span></h2>
+    <p lang="en">Every live rule on this page is specified formally in the protocol spec, and exercised by the test suites and the deterministic demos.</p>
+    <p lang="es">Cada regla en producción de esta página está especificada formalmente en el spec del protocolo, y la ejercitan las suites de pruebas y los demos determinísticos.</p>
+    <div class="grid-2">
+      <div class="card card-accent">
+        <h3><span lang="en">Protocol spec</span><span lang="es">Spec del protocolo</span></h3>
+        <p lang="en">The normative rules: state machine, ledger invariant, staking, slashing and registry verification.</p>
+        <p lang="es">Las reglas normativas: máquina de estados, invariante del libro contable, staking, slashing y verificación de registros.</p>
+        <p><a href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/docs/SPEC.md" target="_blank" rel="noopener"><span lang="en">Read SPEC.md on GitHub →</span><span lang="es">Leer SPEC.md en GitHub →</span></a></p>
+      </div>
+      <div class="card card-accent">
+        <h3>FAQ</h3>
+        <p lang="en">The short answers: why a provider would stake, what a dispute costs, what happens at $0 stake.</p>
+        <p lang="es">Las respuestas cortas: por qué un proveedor pondría colateral, qué cuesta una disputa, qué pasa con el colateral en $0.</p>
+        <p><a href="/docs/faq.html"><span lang="en">Read the FAQ →</span><span lang="es">Leer las preguntas frecuentes →</span></a></p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<footer class="footer">
+  <div class="wrap footer-cols">
+    <div>
+      <a class="brand" href="/index.html" aria-label="Pacta Protocol">
+        <svg viewBox="0 0 100 106" fill="none" stroke="currentColor" stroke-width="8.5" stroke-linecap="butt" stroke-linejoin="round" aria-hidden="true">
+          <path d="M31.5 21 V12 Q31.5 6 37.5 6 H86.5 Q92.5 6 92.5 12 V51 Q92.5 57 86.5 57 H77"/>
+          <path d="M58 57 H37.5 Q31.5 57 31.5 51 V33"/>
+          <path d="M11.5 27 H60.5 Q66.5 27 66.5 33 V72 Q66.5 78 60.5 78 H11.5 Q5.5 78 5.5 72 V33 Q5.5 27 11.5 27 Z"/>
+          <path d="M5.5 76 V102"/>
+        </svg>
+        <span class="wordmark">Pacta<br>Protocol</span>
+      </a>
+      <p class="tag" lang="en">Agreements that enforce themselves.</p>
+      <p class="tag" lang="es">Pactos que se cumplen por diseño.</p>
+    </div>
+    <div>
+      <h4 lang="en">Product</h4><h4 lang="es">Producto</h4>
+      <a href="https://app.pactaprotocol.org/" target="_blank" rel="noopener"><span lang="en">Try Pacta</span><span lang="es">Prueba Pacta</span></a>
+      <a href="/index.html#how"><span lang="en">How it works</span><span lang="es">Cómo funciona</span></a>
+      <a href="/index.html#registry"><span lang="en">Service registry</span><span lang="es">Registro de servicios</span></a>
+    </div>
+    <div>
+      <h4 lang="en">Build</h4><h4 lang="es">Construir</h4>
+      <a href="/docs/index.html"><span lang="en">Getting started</span><span lang="es">Primeros pasos</span></a>
+      <a href="/docs/mcp.html"><span lang="en">MCP integration</span><span lang="es">Integración MCP</span></a>
+      <a href="/docs/vetting.html"><span lang="en">Vetting game theory</span><span lang="es">Teoría de juegos</span></a>
+      <a href="/docs/faq.html">FAQ</a>
+    </div>
+    <div>
+      <h4 lang="en">Company</h4><h4 lang="es">Compañía</h4>
+      <a href="mailto:hello@pactaprotocol.org"><span lang="en">Contact</span><span lang="es">Contacto</span></a>
+      <a href="/privacy.html"><span lang="en">Privacy Policy</span><span lang="es">Política de privacidad</span></a>
+      <a href="https://github.com/Pacta-Protocol" target="_blank" rel="noopener">GitHub</a>
+      <a href="/documents/Pacta-Explainer-EN.pdf" target="_blank" rel="noopener"><span lang="en">Explainer (PDF)</span><span lang="es">Explainer (PDF)</span></a>
+      <a href="/documents/Pacta-Pitch-EN.pdf" target="_blank" rel="noopener"><span lang="en">Pitch deck (PDF)</span><span lang="es">Pitch (PDF)</span></a>
+    </div>
+  </div>
+  <div class="wrap footer-base">
+    <span lang="en">© 2026 Pacta Protocol · Open source under the MIT License</span>
+    <span lang="es">© 2026 Pacta Protocol · Código abierto bajo licencia MIT</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var KEY = 'pacta-lang', saved = 'en';
+  try { saved = localStorage.getItem(KEY) || 'en'; } catch (e) {}
+  if (saved !== 'en' && saved !== 'es') saved = 'en';
+  function apply(lang) {
+    document.body.setAttribute('data-lang', lang);
+    document.documentElement.setAttribute('lang', lang);
+    document.querySelectorAll('[data-set-lang]').forEach(function (b) {
+      b.setAttribute('aria-pressed', b.getAttribute('data-set-lang') === lang ? 'true' : 'false');
+    });
+    try { localStorage.setItem(KEY, lang); } catch (e) {}
+  }
+  document.addEventListener('click', function (ev) {
+    var btn = ev.target.closest('[data-set-lang]');
+    if (btn) apply(btn.getAttribute('data-set-lang'));
+  });
+  apply(saved);
+})();
+</script>
+</body>
+</html>
