@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Buying land without being scammed - Pacta Protocol Case Studies</title>
+  <meta name="description" content="A foreign buyer's life savings, a coastal lot in Costa Rica, and a registry reference that does not exist. How an AI agent on Pacta catches the scam before the money moves.">
+  <link rel="canonical" href="https://pactaprotocol.org/docs/case-land.html">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/site.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://pactaprotocol.org/" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://pactaprotocol.org/docs/index.html" },
+      { "@type": "ListItem", "position": 3, "name": "Case studies", "item": "https://pactaprotocol.org/docs/cases.html" },
+      { "@type": "ListItem", "position": 4, "name": "Land, Costa Rica", "item": "https://pactaprotocol.org/docs/case-land.html" }
+    ]
+  }
+  </script>
+</head>
+<body data-lang="en">
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/index.html" aria-label="Pacta Protocol">
+      <svg viewBox="0 0 100 106" fill="none" stroke="currentColor" stroke-width="8.5" stroke-linecap="butt" stroke-linejoin="round" aria-hidden="true">
+        <path d="M31.5 21 V12 Q31.5 6 37.5 6 H86.5 Q92.5 6 92.5 12 V51 Q92.5 57 86.5 57 H77"/>
+        <path d="M58 57 H37.5 Q31.5 57 31.5 51 V33"/>
+        <path d="M11.5 27 H60.5 Q66.5 27 66.5 33 V72 Q66.5 78 60.5 78 H11.5 Q5.5 78 5.5 72 V33 Q5.5 27 11.5 27 Z"/>
+        <path d="M5.5 76 V102"/>
+      </svg>
+      <span class="brand-word">Pacta<span class="sub">&nbsp;Protocol</span></span>
+    </a>
+    <nav class="nav-links">
+      <a href="/index.html#how"><span lang="en">How it works</span><span lang="es">Cómo funciona</span></a>
+      <a href="/index.html#agents"><span lang="en">For agents (MCP)</span><span lang="es">Para agentes (MCP)</span></a>
+      <a href="/docs/index.html">Docs</a>
+      <a href="/docs/faq.html">FAQ</a>
+    </nav>
+    <div class="nav-right">
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button type="button" data-set-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-set-lang="es" aria-pressed="false">ES</button>
+      </div>
+      <a class="btn btn-primary" href="https://app.pactaprotocol.org/" target="_blank" rel="noopener"><span lang="en">Try Pacta</span><span lang="es">Prueba Pacta</span></a>
+    </div>
+  </div>
+</header>
+
+<div class="docs-layout">
+  <aside class="docs-side">
+    <p class="kicker"><span lang="en">Documentation</span><span lang="es">Documentación</span></p>
+    <nav>
+      <a href="/docs/index.html"><span lang="en">Getting started</span><span lang="es">Primeros pasos</span></a>
+      <a href="/docs/mcp.html"><span lang="en">MCP integration</span><span lang="es">Integración MCP</span></a>
+      <a href="/docs/vetting.html"><span lang="en">Vetting game theory</span><span lang="es">Teoría de juegos</span></a>
+      <a href="/docs/impact.html"><span lang="en">Impact</span><span lang="es">Impacto</span></a>
+      <a href="/docs/cases.html" aria-current="page"><span lang="en">Case studies</span><span lang="es">Casos</span></a>
+      <a href="/docs/faq.html">FAQ</a>
+    </nav>
+  </aside>
+
+  <main class="docs-content">
+    <p class="crumbs"><a href="/index.html"><span lang="en">Home</span><span lang="es">Inicio</span></a><span>/</span><a href="/docs/cases.html"><span lang="en">Case studies</span><span lang="es">Casos</span></a><span>/</span><span lang="en">Land, Costa Rica</span><span lang="es">Tierra, Costa Rica</span></p>
+    <p class="eyebrow"><span lang="en">Case study · Land · Costa Rica</span><span lang="es">Caso · Tierra · Costa Rica</span></p>
+    <h1 lang="en">Buying land without being scammed</h1>
+    <h1 lang="es">Comprar tierra sin que te estafen</h1>
+    <p class="lede" lang="en">This page is for one reader: the person who saved for years to buy a piece of land in another country, and knows, deep down, that they would not see the scam coming.</p>
+    <p class="lede" lang="es">Esta página es para un solo lector: la persona que ahorró durante años para comprar un terreno en otro país, y sabe, en el fondo, que no vería venir la estafa.</p>
+
+    <h2><span lang="en">The story</span><span lang="es">La historia</span></h2>
+    <p lang="en">Sarah teaches high school in Denver. The lot is near the coast of Guanacaste: a hillside, some trees, the retirement plan. It costs most of what she has saved in her life. And everyone has a horror story for her: deeds sold twice, powers of attorney forged by the seller's own notary, surveys that show a different piece of land than the one registered, liens that surface after the money is gone. The stories are not folklore. The US Embassy in San José has received so many property-dispute reports from its citizens that it publishes a standing warning, along with the hardest sentence in it: once it happens, the embassy cannot help.</p>
+    <p lang="es">Sarah da clases de secundaria en Denver. El lote está cerca de la costa de Guanacaste: una ladera, unos árboles, el plan de retiro. Cuesta la mayor parte de lo que ha ahorrado en su vida. Y todo el mundo tiene una historia de terror para ella: escrituras vendidas dos veces, poderes falsificados por el propio notario del vendedor, peritajes que muestran un terreno distinto al registrado, gravámenes que aparecen cuando el dinero ya se fue. Y no son leyendas. La embajada de EE. UU. en San José ha recibido tantos reportes de disputas de propiedad de sus ciudadanos que publica una advertencia permanente, con la frase más dura adentro: cuando ya ocurrió, la embajada no puede ayudar.</p>
+    <p lang="en">So Sarah does something new: she does not wire money to anyone. Her AI agent does the hiring on a Pacta marketplace. It finds a notary and a surveyor who have posted real collateral behind their work, contracts the due diligence in milestones, and funds an escrow neither side can touch. Then comes the part no five-star rating can fake: every deliverable has to cite a reference in the Registro Nacional, Costa Rica's public property registry, and the agent looks each reference up itself. It does not trust the PDF; it trusts the registry.</p>
+    <p lang="es">Así que Sarah hace algo nuevo: no le gira dinero a nadie. Su agente de IA contrata en un marketplace Pacta. Encuentra un notario y un topógrafo que han depositado colateral real detrás de su trabajo, contrata la due diligence por hitos, y fondea una custodia que ninguna de las partes puede tocar. Y entonces viene la parte que ninguna calificación de cinco estrellas puede fingir: cada entregable tiene que citar una referencia del Registro Nacional, el registro público de propiedad de Costa Rica, y el agente busca cada referencia por su cuenta. No le cree al PDF; le cree al registro.</p>
+    <p lang="en">One deliverable fails. It cites a filing reference the registry has never seen. The agent does not argue about it: it opens a dispute, a neutral arbiter confirms the reference does not exist, and the protocol executes the consequences by itself. The escrow returns to Sarah. A fifth of the job's price is taken from the cheater's own collateral as compensation. The provider's vetted badge disappears from the marketplace at that same moment. The agent hires the next verifiable professional, the real references check out, and the due diligence completes. Sarah never felt the bullet pass.</p>
+    <p lang="es">Un entregable falla. Cita una referencia que el registro nunca ha visto. El agente no discute: abre una disputa, un árbitro neutral confirma que la referencia no existe, y el protocolo ejecuta las consecuencias solo. La custodia vuelve a Sarah. Una quinta parte del precio del trabajo sale del propio colateral del tramposo como compensación. La insignia de verificado del proveedor desaparece del marketplace en ese mismo instante. El agente contrata al siguiente profesional verificable, las referencias reales cuadran, y la due diligence se completa. Sarah nunca sintió pasar la bala.</p>
+    <p lang="en">There is a second reader of this page: the honest notary in Santa Cruz who won that job. She has no website worth mentioning and no ad budget. She won it because she is verifiable: her collateral and her registry filings spoke for her before any marketing could. Safety for one side of this story is opportunity for the other. That is the whole design.</p>
+    <p lang="es">Esta página tiene una segunda lectora: la notaria honesta de Santa Cruz que ganó ese trabajo. No tiene un sitio web que valga la pena mencionar ni presupuesto de anuncios. Lo ganó porque es verificable: su colateral y sus inscripciones en el registro hablaron por ella antes de que cualquier marketing pudiera hacerlo. La seguridad de un lado de esta historia es la oportunidad del otro. Ese es todo el diseño.</p>
+
+    <h2><span lang="en">The facts under the story</span><span lang="es">Los hechos debajo de la historia</span></h2>
+    <ul>
+      <li lang="en">The US Embassy in Costa Rica maintains a standing warning about property purchases, reports "numerous" property disputes involving US citizens, and states it cannot intervene in them. <a href="https://cr.usembassy.gov/services/residing-in-costa-rica/" target="_blank" rel="noopener">Source: US Embassy San José</a>.</li>
+      <li lang="es">La embajada de EE. UU. en Costa Rica mantiene una advertencia permanente sobre compra de propiedades, reporta "numerosas" disputas de propiedad de sus ciudadanos, y declara que no puede intervenir en ellas. <a href="https://cr.usembassy.gov/services/residing-in-costa-rica/" target="_blank" rel="noopener">Fuente: Embajada de EE. UU. en San José</a>.</li>
+      <li lang="en">The documented schemes are exactly the ones the protocol checks for: sellers who are not the owners, forged powers of attorney, survey mismatches and hidden liens, concentrated in coastal areas popular with foreign buyers. <a href="https://thelatinvestor.com/blogs/news/costa-rica-buy-land" target="_blank" rel="noopener">Source: foreign-buyer guidance, 2026</a>.</li>
+      <li lang="es">Los esquemas documentados son exactamente los que el protocolo verifica: vendedores que no son los dueños, poderes falsificados, peritajes que no cuadran y gravámenes ocultos, concentrados en las zonas costeras populares entre compradores extranjeros. <a href="https://thelatinvestor.com/blogs/news/costa-rica-buy-land" target="_blank" rel="noopener">Fuente: guía para compradores extranjeros, 2026</a>.</li>
+      <li lang="en">The defense already exists and is public: Costa Rica's Registro Nacional can be consulted online, and even offers owners automatic alerts on transactions against their property. What was missing is the layer that lets an AI agent use it. <a href="https://www.rnpdigital.com/" target="_blank" rel="noopener">Source: Registro Nacional</a>.</li>
+      <li lang="es">La defensa ya existe y es pública: el Registro Nacional de Costa Rica se consulta en línea, y hasta ofrece a los dueños alertas automáticas sobre movimientos de su propiedad. Lo que faltaba es la capa que le permite a un agente de IA usarla. <a href="https://www.rnpdigital.com/" target="_blank" rel="noopener">Fuente: Registro Nacional</a>.</li>
+    </ul>
+
+    <div class="note" lang="en"><strong>Honesty first:</strong> this is a reproducible demonstration, not a customer story yet. Sarah is a composite; the money is simulated; the fraud, the escrow, the dispute, the slashing and the registry checks are real, tested code you can run below. The <a href="/docs/impact.html">Guanacaste pilot</a> is what puts real names in this story.</div>
+    <div class="note" lang="es"><strong>Honestidad primero:</strong> esto es una demostración reproducible, todavía no la historia de un cliente. Sarah es un personaje compuesto; el dinero es simulado; el fraude, la custodia, la disputa, el slashing y las verificaciones de registro son código real y probado que puedes correr abajo. El <a href="/docs/impact.html">piloto de Guanacaste</a> es lo que le pone nombres reales a esta historia.</div>
+
+    <h2><span lang="en">Reproduce it yourself</span><span lang="es">Reprodúcelo tú mismo</span></h2>
+    <p lang="en">The whole story, self-audited, in about a minute. No LLM, no API keys: a scripted buyer drives the same MCP tools an AI agent uses, then an independent audit checks every claim over the REST API.</p>
+    <p lang="es">La historia completa, auto-auditada, en un minuto. Sin LLM y sin API keys: un comprador programado usa las mismas herramientas MCP que usa un agente de IA, y después una auditoría independiente comprueba cada afirmación por la API REST.</p>
+    <pre><code>git clone https://github.com/Pacta-Protocol/Pacta.Protocol.git protocol
+git clone https://github.com/Pacta-Protocol/Pacta.Example.RealEstate.git
+cd protocol && npm install && cd ../Pacta.Example.RealEstate && npm install
+npm run roundtrip   <span class="c"># exits 0 only if all 8 audit checks pass</span></code></pre>
+    <p lang="en">The same purchase has also been driven live by an unmodified Claude agent in the LandBridge copilot, over the identical tool surface. <a href="https://github.com/Pacta-Protocol/Pacta.Example.RealEstate" target="_blank" rel="noopener">The repo</a> has both paths.</p>
+    <p lang="es">La misma compra también la ha ejecutado en vivo un agente Claude sin modificar en el copiloto LandBridge, sobre la misma superficie de herramientas. <a href="https://github.com/Pacta-Protocol/Pacta.Example.RealEstate" target="_blank" rel="noopener">El repo</a> trae los dos caminos.</p>
+
+    <p><a href="/docs/cases.html"><span lang="en">← All case studies</span><span lang="es">← Todos los casos</span></a></p>
+  </main>
+</div>
+
+<footer class="footer">
+  <div class="wrap footer-cols">
+    <div>
+      <a class="brand" href="/index.html" aria-label="Pacta Protocol">
+        <svg viewBox="0 0 100 106" fill="none" stroke="currentColor" stroke-width="8.5" stroke-linecap="butt" stroke-linejoin="round" aria-hidden="true">
+          <path d="M31.5 21 V12 Q31.5 6 37.5 6 H86.5 Q92.5 6 92.5 12 V51 Q92.5 57 86.5 57 H77"/>
+          <path d="M58 57 H37.5 Q31.5 57 31.5 51 V33"/>
+          <path d="M11.5 27 H60.5 Q66.5 27 66.5 33 V72 Q66.5 78 60.5 78 H11.5 Q5.5 78 5.5 72 V33 Q5.5 27 11.5 27 Z"/>
+          <path d="M5.5 76 V102"/>
+        </svg>
+        <span class="wordmark">Pacta<br>Protocol</span>
+      </a>
+      <p class="tag" lang="en">Agreements that enforce themselves.</p>
+      <p class="tag" lang="es">Pactos que se cumplen por diseño.</p>
+    </div>
+    <div>
+      <h4 lang="en">Product</h4><h4 lang="es">Producto</h4>
+      <a href="https://app.pactaprotocol.org/" target="_blank" rel="noopener"><span lang="en">Try Pacta</span><span lang="es">Prueba Pacta</span></a>
+      <a href="/index.html#how"><span lang="en">How it works</span><span lang="es">Cómo funciona</span></a>
+      <a href="/index.html#registry"><span lang="en">Service registry</span><span lang="es">Registro de servicios</span></a>
+      <a href="/docs/cases.html"><span lang="en">Case studies</span><span lang="es">Casos</span></a>
+    </div>
+    <div>
+      <h4 lang="en">Build</h4><h4 lang="es">Construir</h4>
+      <a href="/docs/index.html"><span lang="en">Getting started</span><span lang="es">Primeros pasos</span></a>
+      <a href="/docs/mcp.html"><span lang="en">MCP integration</span><span lang="es">Integración MCP</span></a>
+      <a href="/docs/vetting.html"><span lang="en">Vetting game theory</span><span lang="es">Teoría de juegos</span></a>
+      <a href="/docs/impact.html"><span lang="en">Impact</span><span lang="es">Impacto</span></a>
+      <a href="/docs/faq.html">FAQ</a>
+      <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/ROADMAP.md" target="_blank" rel="noopener">Roadmap</a>
+    </div>
+    <div>
+      <h4 lang="en">Project</h4><h4 lang="es">Proyecto</h4>
+      <a href="mailto:hello@pactaprotocol.org"><span lang="en">Contact</span><span lang="es">Contacto</span></a>
+      <a href="/privacy.html"><span lang="en">Privacy Policy</span><span lang="es">Política de privacidad</span></a>
+      <a href="https://github.com/Pacta-Protocol" target="_blank" rel="noopener">GitHub</a>
+      <a lang="en" href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/docs/LITEPAPER.md" target="_blank" rel="noopener">Litepaper</a>
+      <a lang="es" href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/docs/LITEPAPER.es.md" target="_blank" rel="noopener">Litepaper</a>
+      <a href="/documents/Pacta-Litepaper-EN.pdf" target="_blank" rel="noopener">Litepaper (PDF)</a>
+    </div>
+  </div>
+  <div class="wrap footer-base">
+    <span lang="en">© 2026 Pacta Protocol · Open source under the MIT License</span>
+    <span lang="es">© 2026 Pacta Protocol · Código abierto bajo licencia MIT</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var KEY = 'pacta-lang', saved = 'en';
+  try { saved = localStorage.getItem(KEY) || 'en'; } catch (e) {}
+  if (saved !== 'en' && saved !== 'es') saved = 'en';
+  function apply(lang) {
+    document.body.setAttribute('data-lang', lang);
+    document.documentElement.setAttribute('lang', lang);
+    document.querySelectorAll('[data-set-lang]').forEach(function (b) {
+      b.setAttribute('aria-pressed', b.getAttribute('data-set-lang') === lang ? 'true' : 'false');
+    });
+    try { localStorage.setItem(KEY, lang); } catch (e) {}
+  }
+  document.addEventListener('click', function (ev) {
+    var btn = ev.target.closest('[data-set-lang]');
+    if (btn) apply(btn.getAttribute('data-set-lang'));
+  });
+  apply(saved);
+})();
+</script>
+</body>
+</html>

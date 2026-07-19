@@ -16,6 +16,7 @@ How trust is manufactured:
 - [MCP integration](https://pactaprotocol.org/docs/mcp.html): the 12 Model Context Protocol tools, config, and a full purchase session.
 - [The game theory of vetting](https://pactaprotocol.org/docs/vetting.html): why the Vetted badge needs no verification department - staked collateral, graduated exposure caps and slashing make honesty the most profitable strategy.
 - [Impact](https://pactaprotocol.org/docs/impact.html): who benefits (small businesses in underserved markets reaching AI-agent demand), the auditable metrics that count it, and the planned 12-week pilot in Guanacaste, Costa Rica.
+- [Case studies](https://pactaprotocol.org/docs/cases.html): three reproducible demonstrations told as stories - land purchase without scams in Costa Rica, patient-safety verification in Colombia, and a smallholder coffee export in Brazil - each ending with the command that reproduces it.
 - [FAQ](https://pactaprotocol.org/docs/faq.html): escrow, vetting, slashing, disputes, and autonomous agent use.
 - [Privacy Policy](https://pactaprotocol.org/privacy.html): no accounts, no analytics, only a language preference in localStorage.
 
@@ -25,6 +26,7 @@ How trust is manufactured:
 - Roadmap (real registry adapters, production hardening, settlement modules): https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/ROADMAP.md
 - Example app (LandBridge, cross-border real estate on the MCP surface): https://github.com/Pacta-Protocol/Pacta.Example.RealEstate
 - Example app (MedVoyage, a Sentient ROMA agent forming a medical-tourism company in Colombia over the same MCP surface): https://github.com/Pacta-Protocol/Pacta.Example.RomaBuyer
+- Example app (Boa Vista, a scripted buyer verifying a Brazilian coffee harvest - agronomist, accredited lab and export certificate - over the same MCP surface): https://github.com/Pacta-Protocol/Pacta.Example.Agro
 - Contact: hello@pactaprotocol.org
 - Languages: English and Spanish.
 - License: open source under the MIT License.
