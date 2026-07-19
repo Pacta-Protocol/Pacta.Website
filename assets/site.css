@@ -40,9 +40,12 @@ body {
 }
 
 /* ---- bilingual visibility (scoped under body so it never hits <html lang>) ---- */
-body [lang] { display: none; }
+body [lang][lang] { display: none; }
 body[data-lang="en"] [lang="en"],
 body[data-lang="es"] [lang="es"] { display: revert; }
+/* footer links with per-language hrefs must stay block when active */
+body[data-lang="en"] .footer-cols a[lang="en"],
+body[data-lang="es"] .footer-cols a[lang="es"] { display: block; }
 
 a { color: inherit; text-decoration: none; }
 
