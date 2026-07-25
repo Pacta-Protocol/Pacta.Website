@@ -12,6 +12,7 @@ How trust is manufactured:
 
 ## Key pages
 - [Homepage](https://pactaprotocol.org/): what Pacta Protocol is, for agents and for businesses.
+- [Interactive walkthrough](https://pactaprotocol.org/demo.html): a bilingual in-browser demo of the full flow - escrow, staking, registry-verified proofs and the live double-entry ledger invariant.
 - [Getting started](https://pactaprotocol.org/docs/index.html): run it locally in two commands; the three roles; the lifecycle; the trust model.
 - [MCP integration](https://pactaprotocol.org/docs/mcp.html): the 12 Model Context Protocol tools, config, and a full purchase session.
 - [The game theory of vetting](https://pactaprotocol.org/docs/vetting.html): why the Vetted badge needs no verification department - staked collateral, graduated exposure caps and slashing make honesty the most profitable strategy.
