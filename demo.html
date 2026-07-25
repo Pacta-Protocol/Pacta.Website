@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Interactive bilingual (EN/ES) walkthrough of the Pacta protocol: escrow, staking, registry-verified proofs and a live double-entry ledger invariant.">
+<title>Pacta · Interactive Protocol Walkthrough</title>
+</head>
+<body>
+<style>
+  :root {
+    --navy:     #0A0E17;
+    --navy-2:   #0D1220;
+    --navy-3:   #10162A;
+    --navy-line: rgba(255,255,255,.09);
+    --on-navy:  #EAF0FF;
+    --on-navy-soft: #AEB8D0;
+    --on-navy-dim:  #7A85A0;
+
+    --bg:       #EDF0F6;
+    --surface:  #FFFFFF;
+    --surface-2:#F5F7FB;
+    --ink:      #0D1117;
+    --ink-soft: #434B5C;
+    --ink-dim:  #6B7486;
+    --line:     #E3E7F0;
+
+    --accent:   #3B5BFF;
+    --accent-2: #4353FF;
+    --accent-soft: #6E7BFF;
+    --accent-ink: #FFFFFF;
+    --cyan:     #0F92B8;
+    --cyan-ink: #063241;
+
+    --good: #0E8A5F; --good-bg: #E6F6EF; --good-line:#B7E3CE;
+    --bad:  #C4362B; --bad-bg:  #FDECEA; --bad-line: #F3C7C2;
+    --warn: #8A5A12; --warn-bg: #FBF0DC; --warn-line:#EAD3A3;
+
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    --sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --radius: 14px;
+    --radius-sm: 10px;
+    --shadow: 0 1px 2px rgba(13,17,23,.04), 0 8px 24px rgba(13,17,23,.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:        #070A12;
+      --surface:   #10162A;
+      --surface-2: #0D1220;
+      --ink:       #EAF0FF;
+      --ink-soft:  #AEB8D0;
+      --ink-dim:   #7A85A0;
+      --line:      rgba(255,255,255,.09);
+      --accent:    #6E7BFF;
+      --accent-2:  #4353FF;
+      --accent-soft:#8E98FF;
+      --cyan:      #58E0FF;
+      --cyan-ink:  #06202B;
+      --good:#3DDC97; --good-bg: rgba(61,220,151,.10); --good-line: rgba(61,220,151,.28);
+      --bad: #FF6F62; --bad-bg:  rgba(255,111,98,.10); --bad-line:  rgba(255,111,98,.30);
+      --warn:#E4AC57; --warn-bg: rgba(228,172,87,.10); --warn-line: rgba(228,172,87,.30);
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg:#EDF0F6; --surface:#FFFFFF; --surface-2:#F5F7FB; --ink:#0D1117; --ink-soft:#434B5C;
+    --ink-dim:#6B7486; --line:#E3E7F0; --accent:#3B5BFF; --accent-2:#4353FF; --accent-soft:#6E7BFF;
+    --cyan:#0F92B8; --cyan-ink:#063241;
+    --good:#0E8A5F; --good-bg:#E6F6EF; --good-line:#B7E3CE;
+    --bad:#C4362B; --bad-bg:#FDECEA; --bad-line:#F3C7C2;
+    --warn:#8A5A12; --warn-bg:#FBF0DC; --warn-line:#EAD3A3;
+    --shadow:0 1px 2px rgba(13,17,23,.04), 0 8px 24px rgba(13,17,23,.06);
+  }
+  :root[data-theme="dark"] {
+    --bg:#070A12; --surface:#10162A; --surface-2:#0D1220; --ink:#EAF0FF; --ink-soft:#AEB8D0;
+    --ink-dim:#7A85A0; --line:rgba(255,255,255,.09); --accent:#6E7BFF; --accent-2:#4353FF;
+    --accent-soft:#8E98FF; --cyan:#58E0FF; --cyan-ink:#06202B;
+    --good:#3DDC97; --good-bg:rgba(61,220,151,.10); --good-line:rgba(61,220,151,.28);
+    --bad:#FF6F62; --bad-bg:rgba(255,111,98,.10); --bad-line:rgba(255,111,98,.30);
+    --warn:#E4AC57; --warn-bg:rgba(228,172,87,.10); --warn-line:rgba(228,172,87,.30);
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--sans); font-size: 15px; line-height: 1.5;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; }
+  .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+
+  /* chrome (always navy, a Pacta signature) */
+  .chrome { background: var(--navy); color: var(--on-navy); border-bottom: 1px solid var(--navy-line); }
+  .bar { display: flex; align-items: center; gap: 12px; padding: 14px 22px; max-width: 1120px; margin: 0 auto; }
+  .brand { display: inline-flex; align-items: center; gap: 11px; }
+  .brand-mark { width: 28px; height: 30px; color: var(--on-navy); flex: none; }
+  .brand-word { display: inline-flex; align-items: baseline; gap: 6px; letter-spacing: -.01em; }
+  .brand-name { font-size: 18px; font-weight: 800; }
+  .brand-sub  { font-size: 18px; font-weight: 400; color: var(--on-navy-dim); }
+  .bar .spacer { flex: 1; }
+  .chip-btn {
+    font: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
+    color: var(--on-navy-soft); background: var(--navy-3);
+    border: 1px solid var(--navy-line); border-radius: 999px; padding: 7px 13px;
+    display: inline-flex; align-items: center; gap: 7px; transition: color .12s, background .12s, border-color .12s;
+  }
+  .chip-btn:hover { color: var(--on-navy); background: #172038; }
+  .chip-btn:focus-visible { outline: 2px solid var(--accent-soft); outline-offset: 2px; }
+
+  .hero { background: var(--navy); color: var(--on-navy); padding: 26px 22px 34px; }
+  .hero .inner { max-width: 1120px; margin: 0 auto; }
+  .hero .eyebrow { color: var(--cyan); }
+  @media (prefers-color-scheme: light) { .hero .eyebrow { color: #7BEBFF; } }
+  :root[data-theme="light"] .hero .eyebrow { color: #7BEBFF; }
+  .hero h1 {
+    font-size: clamp(26px, 4.4vw, 40px); line-height: 1.08; font-weight: 800;
+    letter-spacing: -.022em; margin: 12px 0 0; max-width: 20ch; text-wrap: balance;
+  }
+  .hero h1 .grad {
+    background: linear-gradient(92deg, var(--accent-soft), var(--cyan));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero p { color: var(--on-navy-soft); font-size: clamp(15px, 1.6vw, 17px); margin: 14px 0 0; max-width: 62ch; }
+
+  .stage { padding: 22px; display: grid; grid-template-columns: 1.45fr 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 900px) { .stage { grid-template-columns: 1fr; } }
+
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+  .pad { padding: 18px 20px; }
+  .flow { display: flex; flex-direction: column; gap: 16px; }
+
+  .track { display: flex; flex-wrap: wrap; gap: 6px; }
+  .node {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 12px; font-weight: 600; padding: 5px 11px 5px 9px; border-radius: 999px;
+    color: var(--ink-dim); background: var(--surface-2); border: 1px solid var(--line); transition: all .25s ease;
+  }
+  .node .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; opacity: .5; }
+  .node.done { color: var(--good); border-color: var(--good-line); background: var(--good-bg); }
+  .node.done .dot { opacity: 1; }
+  .node.active { color: var(--accent-ink); background: var(--accent-2); border-color: var(--accent-2); box-shadow: 0 4px 14px rgba(67,83,255,.28); }
+  .node.active .dot { opacity: 1; background: #fff; }
+  .node.resolved { color: var(--warn); background: var(--warn-bg); border-color: var(--warn-line); }
+
+  .parties { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .party { display: flex; align-items: center; gap: 10px; }
+  .avatar { width: 34px; height: 34px; border-radius: 9px; flex: none; display: grid; place-items: center; font-weight: 800; font-size: 14px; color: #fff; }
+  .avatar.a { background: linear-gradient(135deg, #4353FF, #6E7BFF); }
+  .avatar.b { background: linear-gradient(135deg, #0F92B8, #17B6D6); }
+  .party .name { font-weight: 700; font-size: 14px; line-height: 1.15; }
+  .party .role { font-size: 12px; color: var(--ink-dim); }
+  .arrow { color: var(--ink-dim); font-size: 18px; }
+  .offer-line { margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--line); display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+  .offer-title { font-weight: 600; font-size: 14px; }
+  .offer-meta { font-size: 12px; color: var(--ink-dim); margin-top: 2px; }
+  .price-tag { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 22px; font-weight: 700; letter-spacing: -.01em; }
+
+  .narr-eyebrow { color: var(--accent); }
+  .narr h2 { font-size: 17px; margin: 8px 0 6px; font-weight: 700; letter-spacing: -.01em; }
+  .narr p { margin: 0; color: var(--ink-soft); font-size: 14.5px; }
+  .narr p code, .inline-code { font-family: var(--mono); font-size: .9em; background: var(--surface-2); border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; }
+
+  .module { margin-top: 14px; border-radius: var(--radius-sm); border: 1px solid var(--line); overflow: hidden; }
+  .module-head { display: flex; align-items: center; gap: 8px; padding: 9px 13px; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+  .module-body { padding: 12px 13px; font-size: 13.5px; color: var(--ink-soft); }
+  .module.good .module-head { background: var(--good-bg); color: var(--good); }
+  .module.info .module-head { background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); }
+  .module.warn .module-head { background: var(--warn-bg); color: var(--warn); }
+  .kv { display: flex; justify-content: space-between; gap: 12px; padding: 3px 0; }
+  .kv + .kv { border-top: 1px dotted var(--line); }
+  .kv .k { color: var(--ink-dim); font-size: 13px; }
+  .kv .v { font-family: var(--mono); font-variant-numeric: tabular-nums; font-weight: 600; font-size: 13px; }
+  .meter { height: 6px; border-radius: 999px; background: var(--surface-2); overflow: hidden; margin-top: 8px; border: 1px solid var(--line); }
+  .meter > span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent-2), var(--accent-soft)); border-radius: 999px; transition: width .5s ease; }
+
+  .controls { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn { font: inherit; font-weight: 700; font-size: 14.5px; cursor: pointer; border-radius: var(--radius-sm); padding: 12px 18px; border: 1px solid transparent; display: inline-flex; align-items: center; gap: 9px; transition: transform .06s ease, box-shadow .15s, background .15s, filter .15s; }
+  .btn:active { transform: translateY(1px); }
+  .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .btn.primary { background: var(--accent-2); color: #fff; box-shadow: 0 6px 18px rgba(67,83,255,.30); }
+  .btn.primary:hover { filter: brightness(1.06); }
+  .btn.good { background: var(--good); color: #fff; box-shadow: 0 6px 18px rgba(14,138,95,.26); }
+  .btn.good:hover { filter: brightness(1.05); }
+  .btn.ghost { background: transparent; color: var(--ink-soft); border-color: var(--line); }
+  .btn.ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .hint { font-size: 12.5px; color: var(--ink-dim); margin-top: 8px; }
+
+  .ledger { position: sticky; top: 14px; display: flex; flex-direction: column; gap: 14px; }
+  @media (max-width: 900px) { .ledger { position: static; } }
+  .ledger-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 2px; }
+  .ledger-title .eyebrow { color: var(--ink-dim); }
+
+  .invariant { display: flex; align-items: center; gap: 12px; padding: 13px 15px; border-radius: var(--radius-sm); background: var(--good-bg); border: 1px solid var(--good-line); color: var(--good); }
+  .invariant.pulse { animation: pulse .6s ease; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(14,138,95,.30); } 100% { box-shadow: 0 0 0 12px rgba(14,138,95,0); } }
+  .invariant .tick { width: 26px; height: 26px; border-radius: 50%; background: var(--good); color: var(--good-bg); display: grid; place-items: center; flex: none; font-size: 15px; font-weight: 800; }
+  .invariant .label { display: flex; flex-direction: column; line-height: 1.25; }
+  .invariant .label b { font-size: 13.5px; }
+  .invariant .label span { font-size: 12px; opacity: .85; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+  .accounts { display: flex; flex-direction: column; }
+  .acct { padding: 11px 4px; }
+  .acct + .acct { border-top: 1px solid var(--line); }
+  .acct .arow { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+  .acct .an { font-weight: 600; font-size: 13.5px; }
+  .acct .ak { font-size: 11.5px; color: var(--ink-dim); }
+  .acct .bal { font-family: var(--mono); font-variant-numeric: tabular-nums; font-weight: 700; font-size: 14.5px; letter-spacing: -.01em; }
+  .acct .abar { display: block; margin: 7px 0 0; height: 6px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+  .acct .abar > i { display: block; height: 100%; border-radius: 999px; transition: width .55s cubic-bezier(.4,0,.2,1); }
+  .acct[data-k="agent"] .abar > i { background: linear-gradient(90deg,#4353FF,#6E7BFF); }
+  .acct[data-k="escrow"] .abar > i { background: repeating-linear-gradient(45deg, var(--accent-2), var(--accent-2) 6px, var(--accent-soft) 6px, var(--accent-soft) 12px); }
+  .acct[data-k="provider"] .abar > i { background: linear-gradient(90deg,#0F92B8,#17B6D6); }
+  .acct[data-k="stake"] .abar > i { background: linear-gradient(90deg,#8A5A12,#C08A2E); }
+  :root[data-theme="dark"] .acct[data-k="stake"] .abar > i { background: linear-gradient(90deg,#C08A2E,#E4AC57); }
+  @media (prefers-color-scheme: dark) { .acct[data-k="stake"] .abar > i { background: linear-gradient(90deg,#C08A2E,#E4AC57); } }
+  .acct .delta { font-family: var(--mono); font-size: 11.5px; font-weight: 700; opacity: 0; transition: opacity .3s; }
+  .acct .delta.show { opacity: 1; }
+  .acct .delta.up { color: var(--good); }
+  .acct .delta.down { color: var(--bad); }
+
+  .journal-h { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .journal { max-height: 168px; overflow-y: auto; display: flex; flex-direction: column; }
+  .jrow { display: grid; grid-template-columns: 1fr auto; gap: 8px; padding: 8px 2px; font-size: 12.5px; }
+  .jrow + .jrow { border-top: 1px dotted var(--line); }
+  .jrow .jt { color: var(--ink-soft); }
+  .jrow .jt b { color: var(--ink); font-weight: 600; }
+  .jrow .jm { color: var(--ink-dim); font-size: 11px; margin-top: 1px; }
+  .jrow .ja { font-family: var(--mono); font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; text-align: right; }
+  .jrow.enter { animation: slidein .35s ease; }
+  @keyframes slidein { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: none; } }
+  .badge-sm { font-size: 10.5px; font-weight: 700; padding: 2px 7px; border-radius: 999px; text-transform: uppercase; letter-spacing: .04em; }
+  .badge-sm.mint { color: var(--cyan); background: color-mix(in srgb, var(--cyan) 14%, transparent); }
+
+  .foot { max-width: 1120px; margin: 0 auto; padding: 6px 22px 40px; color: var(--ink-dim); font-size: 12.5px; }
+  .foot code { font-family: var(--mono); }
+
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+
+<header class="chrome">
+  <div class="bar">
+    <span class="brand">
+      <svg class="brand-mark" viewBox="0 0 100 106" fill="none" stroke="currentColor" stroke-width="8.5" stroke-linecap="butt" stroke-linejoin="round" aria-hidden="true">
+        <path d="M31.5 21 V12 Q31.5 6 37.5 6 H86.5 Q92.5 6 92.5 12 V51 Q92.5 57 86.5 57 H77"/>
+        <path d="M58 57 H37.5 Q31.5 57 31.5 51 V33"/>
+        <path d="M11.5 27 H60.5 Q66.5 27 66.5 33 V72 Q66.5 78 60.5 78 H11.5 Q5.5 78 5.5 72 V33 Q5.5 27 11.5 27 Z"/>
+        <path d="M5.5 76 V102"/>
+      </svg>
+      <span class="brand-word"><span class="brand-name">Pacta</span><span class="brand-sub">Protocol</span></span>
+    </span>
+    <span class="spacer"></span>
+    <button class="chip-btn" id="langBtn" type="button"><span id="langLabel">Español</span></button>
+    <button class="chip-btn" id="themeBtn" type="button" aria-label="Toggle light or dark theme">
+      <span id="themeIcon">☾</span><span id="themeLabel">Dark</span>
+    </button>
+    <button class="chip-btn" id="restartBtn" type="button">↺ Restart</button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="inner">
+    <div class="eyebrow" id="heroEyebrow"></div>
+    <h1 id="heroH1"></h1>
+    <p id="heroP"></p>
+  </div>
+</section>
+
+<main class="wrap stage">
+  <section class="flow" aria-label="Engagement flow">
+    <nav class="track" id="track" aria-label="Engagement state"></nav>
+
+    <div class="card pad">
+      <div class="parties">
+        <span class="party"><span class="avatar a">A</span><span><span class="name">Aria</span><span class="role" id="roleA"></span></span></span>
+        <span class="arrow" aria-hidden="true">→</span>
+        <span class="party"><span class="avatar b">C</span><span><span class="name">Clínica Verde</span><span class="role" id="roleB"></span></span></span>
+      </div>
+      <div class="offer-line">
+        <div>
+          <div class="offer-title" id="offerTitle"></div>
+          <div class="offer-meta" id="offerMeta"></div>
+        </div>
+        <div class="price-tag">$1,200.00</div>
+      </div>
+    </div>
+
+    <div class="card pad narr" aria-live="polite">
+      <div class="eyebrow narr-eyebrow" id="narrStep"></div>
+      <h2 id="narrTitle"></h2>
+      <p id="narrBody"></p>
+      <div id="module"></div>
+    </div>
+
+    <div>
+      <div class="controls" id="controls"></div>
+      <div class="hint" id="hint"></div>
+    </div>
+  </section>
+
+  <aside class="ledger" aria-label="Live ledger">
+    <div class="ledger-title"><span class="eyebrow" id="ledgerTitle"></span></div>
+
+    <div class="invariant" id="invariant">
+      <span class="tick" aria-hidden="true">✓</span>
+      <span class="label"><b id="invLabel">ledger_ok · true</b><span id="invSum"></span></span>
+    </div>
+
+    <div class="card pad"><div class="accounts" id="accounts"></div></div>
+
+    <div class="card pad">
+      <div class="journal-h"><span class="eyebrow" id="journalHead" style="color:var(--ink-dim)"></span></div>
+      <div class="journal" id="journal"></div>
+    </div>
+  </aside>
+</main>
+
+<footer class="foot" id="footerText"></footer>
+
+<script>
+(function () {
+  "use strict";
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var root = document.documentElement;
+
+  /* ---------- language ---------- */
+  var lang = ((navigator.language || "en").toLowerCase().indexOf("es") === 0) ? "es" : "en";
+  function t(v) { return (v && typeof v === "object" && ("en" in v)) ? v[lang] : v; }
+
+  var UI = {
+    themeDark:  { en: "Dark", es: "Oscuro" },
+    themeLight: { en: "Light", es: "Claro" },
+    restart:    { en: "↺ Restart", es: "↺ Reiniciar" },
+    heroEyebrow:{ en: "Interactive protocol walkthrough", es: "Recorrido interactivo del protocolo" },
+    heroA:      { en: "Trust is ", es: "La confianza se " },
+    heroGrad:   { en: "collateralized", es: "colateraliza" },
+    heroB:      { en: ", not asserted.", es: ", no se afirma." },
+    heroP: {
+      en: "Walk one engagement from handshake to settlement. The money moves through escrow, the provider stakes collateral, proofs verify against a public registry, and the double-entry ledger stays balanced at every single step. Watch the invariant on the right: it never leaks.",
+      es: "Recorre un acuerdo de principio a fin. El dinero pasa por el escrow, el proveedor deposita colateral, las pruebas se verifican contra un registro público, y el libro de doble entrada permanece cuadrado en cada paso. Mira el invariante a la derecha: nunca se fuga."
+    },
+    roleA: { en: "· AI procurement agent", es: "· agente de compras con IA" },
+    roleB: { en: "· vetted provider", es: "· proveedor verificado" },
+    offerTitle: { en: "Apostilled medical-record translation", es: "Traducción apostillada de expediente médico" },
+    offerMeta: {
+      en: "Proof required: public-registry apostille reference · 100% escrowed upfront",
+      es: "Prueba requerida: referencia de apostilla en registro público · 100% en escrow por adelantado"
+    },
+    ledgerTitle: { en: "Live ledger · integer cents", es: "Libro contable en vivo · centavos enteros" },
+    journalHead: { en: "Double-entry journal", es: "Diario de doble entrada" },
+    mint: { en: "mint", es: "emisión" },
+    invSum: { en: "Σ balances = Σ minted = ", es: "Σ saldos = Σ acuñado = " },
+    invOk: { en: "ledger_ok · true", es: "ledger_ok · true" },
+    invBad: { en: "INVARIANT BROKEN", es: "INVARIANTE ROTO" },
+    stepOf: { en: "Step %1 of %2", es: "Paso %1 de %2" },
+    outcome: { en: "Outcome", es: "Resultado" },
+    runAgain: { en: "↺ Run it again", es: "↺ Correr de nuevo" },
+    seeDispute: { en: "See the dispute path →", es: "Ver el camino de disputa →" },
+    seeHappy: { en: "See the happy path →", es: "Ver el camino feliz →" },
+    finalHint: { en: "Both endings keep the ledger balanced. Compare them.", es: "Ambos finales mantienen el libro cuadrado. Compáralos." },
+    release: { en: "✓ Release payment", es: "✓ Liberar el pago" },
+    dispute: { en: "⚖ Open dispute", es: "⚖ Abrir disputa" },
+    foot: {
+      en: 'A faithful simulation of the Pacta reference implementation (protocol spec 0.1.0): same state machine, same ledger invariant, same staking and slashing rules. The live server exposes it at <code>/api/health</code>, <code>/api/ledger/invariant</code> and the full engagement lifecycle. No server required to run this page.',
+      es: 'Una simulación fiel de la implementación de referencia de Pacta (spec del protocolo 0.1.0): misma máquina de estados, mismo invariante del libro contable, mismas reglas de staking y slashing. El servidor en vivo lo expone en <code>/api/health</code>, <code>/api/ledger/invariant</code> y el ciclo completo del acuerdo. No requiere servidor para ver esta página.'
+    }
+  };
+
+  function fmt(cents) {
+    var s = (Math.abs(cents) / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return (cents < 0 ? "-$" : "$") + s;
+  }
+
+  var MINTED = 700000;
+  var ACCTS = [
+    { k: "agent",    name: "Aria",                  kind: { en: "agent balance",    es: "saldo del agente" },        base: 500000 },
+    { k: "escrow",   name: "Escrow",                kind: { en: "protocol-held",    es: "en custodia del protocolo" }, base: 0 },
+    { k: "provider", name: "Clínica Verde",         kind: { en: "provider balance", es: "saldo del proveedor" },      base: 0 },
+    { k: "stake",    name: "Clínica Verde · stake", kind: { en: "collateral",       es: "colateral" },                base: 200000 }
+  ];
+
+  var openingJournal = [
+    { t: { en: "Mint → <b>Aria</b>", es: "Emisión → <b>Aria</b>" }, m: { en: "opening deposit (simulated bank)", es: "depósito inicial (banco simulado)" }, a: 500000, mint: true },
+    { t: { en: "Mint → <b>Clínica Verde · stake</b>", es: "Emisión → <b>Clínica Verde · stake</b>" }, m: { en: "stake deposit, vetting posted", es: "depósito de stake, verificación activada" }, a: 200000, mint: true }
+  ];
+
+  var STEPS = [
+    {
+      state: "draft",
+      bal: { agent: 500000, escrow: 0, provider: 0, stake: 200000 },
+      journal: [],
+      title: { en: "A vetted provider, discovered", es: "Un proveedor verificado, descubierto" },
+      body: {
+        en: "Aria finds an offer from Clínica Verde. Before anything else, Pacta checks that the provider has skin in the game: vetting is not a claim, it is posted collateral.",
+        es: "Aria encuentra una oferta de Clínica Verde. Antes que nada, Pacta comprueba que el proveedor tiene algo en juego: la verificación no es una afirmación, es colateral depositado."
+      },
+      module: {
+        cls: "good",
+        head: { en: "✓ Vetting is collateralized", es: "✓ La verificación es colateral" },
+        rows: [
+          [{ en: "Stake posted", es: "Stake depositado" }, "$2,000.00"],
+          [{ en: "Vetted", es: "Verificado" }, { en: "stake > 0  →  yes", es: "stake > 0  →  sí" }],
+          [{ en: "Exposure cap", es: "Límite de exposición" }, "5 × stake + 50% GMV = $10,000.00"]
+        ],
+        note: { en: "This $1,200 engagement fits well within the cap.", es: "Este acuerdo de $1,200 cabe holgadamente en el límite." },
+        meter: 12
+      },
+      btn: { label: { en: "Agree to terms →", es: "Aceptar los términos →" }, cls: "primary" },
+      hint: { en: "Nothing has moved yet. The ledger is at its opening state.", es: "Nada se ha movido aún. El libro está en su estado inicial." }
+    },
+    {
+      state: "agreed",
+      bal: { agent: 500000, escrow: 0, provider: 0, stake: 200000 },
+      journal: [],
+      title: { en: "The contract becomes immutable", es: "El contrato se vuelve inmutable" },
+      body: {
+        en: "Both sides agree. Price, scope and the proof the job requires are now locked and cannot be edited by either party. The engagement starts counting against the provider's exposure cap.",
+        es: "Ambas partes aceptan. El precio, el alcance y la prueba que exige el trabajo quedan fijados y ninguna parte puede editarlos. El acuerdo empieza a contar contra el límite de exposición del proveedor."
+      },
+      module: {
+        cls: "info",
+        head: { en: "Exposure in use", es: "Exposición en uso" },
+        rows: [ [{ en: "This engagement", es: "Este acuerdo" }, "$1,200.00"], [{ en: "Cap", es: "Límite" }, "$10,000.00"] ],
+        note: { en: "A provider can never take on more active work than its collateral backs.", es: "Un proveedor nunca puede asumir más trabajo activo del que respalda su colateral." },
+        meter: 12
+      },
+      btn: { label: { en: "Fund escrow →", es: "Financiar el escrow →" }, cls: "primary" },
+      hint: { en: "Still no money in motion. Agreement locks terms, not funds.", es: "Todavía sin dinero en movimiento. El acuerdo fija términos, no fondos." }
+    },
+    {
+      state: "funded",
+      bal: { agent: 380000, escrow: 120000, provider: 0, stake: 200000 },
+      journal: [ { t: { en: "<b>Aria</b> → <b>Escrow</b>", es: "<b>Aria</b> → <b>Escrow</b>" }, m: { en: "escrow funding, engagement #1", es: "financiación del escrow, acuerdo #1" }, a: 120000 } ],
+      title: { en: "Money into escrow, before any work", es: "Dinero al escrow, antes de cualquier trabajo" },
+      body: {
+        en: "Aria escrows the full price up front. The funds leave Aria's balance and are held by the protocol, not by the provider. Settlement can only ever release them once.",
+        es: "Aria deposita el precio completo por adelantado. Los fondos salen del saldo de Aria y quedan en custodia del protocolo, no del proveedor. La liquidación solo puede liberarlos una vez."
+      },
+      module: {
+        cls: "info",
+        head: { en: "Escrow holds the value", es: "El escrow retiene el valor" },
+        rows: [ ["Aria", "$3,800.00"], ["Escrow", "$1,200.00"] ],
+        note: { en: "Double release is structurally impossible: the funds live in exactly one place.", es: "El doble pago es estructuralmente imposible: los fondos viven en un solo lugar." }
+      },
+      btn: { label: { en: "Start work →", es: "Empezar el trabajo →" }, cls: "primary" },
+      hint: { en: "Watch Aria's bar shrink and Escrow's appear. The total is unchanged.", es: "Mira cómo la barra de Aria se encoge y aparece la del Escrow. El total no cambia." }
+    },
+    {
+      state: "in_progress",
+      bal: { agent: 380000, escrow: 120000, provider: 0, stake: 200000 },
+      journal: [],
+      title: { en: "The provider does the work", es: "El proveedor hace el trabajo" },
+      body: {
+        en: "With funds safely escrowed, Clínica Verde carries out the job. The protocol simply waits: no polling, no trust required, because the money is already committed and the terms are frozen.",
+        es: "Con los fondos seguros en escrow, Clínica Verde ejecuta el trabajo. El protocolo solo espera: sin sondeos, sin necesidad de confianza, porque el dinero ya está comprometido y los términos congelados."
+      },
+      module: null,
+      btn: { label: { en: "Submit proof →", es: "Entregar la prueba →" }, cls: "primary" },
+      hint: { en: "No ledger change while work is in progress.", es: "El libro no cambia mientras el trabajo está en curso." }
+    },
+    {
+      state: "submitted",
+      bal: { agent: 380000, escrow: 120000, provider: 0, stake: 200000 },
+      journal: [],
+      title: { en: "A proof that verifies itself", es: "Una prueba que se verifica sola" },
+      body: {
+        en: "The provider submits evidence anchored to a public registry, not a screenshot. Pacta verifies the reference against the registry, and Aria can independently re-verify it before paying a cent.",
+        es: "El proveedor entrega evidencia anclada a un registro público, no una captura de pantalla. Pacta verifica la referencia contra el registro, y Aria puede re-verificarla por su cuenta antes de pagar un centavo."
+      },
+      module: {
+        cls: "good",
+        head: { en: "✓ Registry-anchored proof verified", es: "✓ Prueba anclada al registro verificada" },
+        rows: [
+          [{ en: "Reference", es: "Referencia" }, "apostille CR-2026-04821"],
+          [{ en: "Kind", es: "Tipo" }, { en: "apostille", es: "apostilla" }],
+          [{ en: "Registry match", es: "Coincidencia en registro" }, { en: "verified ✓", es: "verificada ✓" }]
+        ],
+        note: { en: "Aria re-verifies independently. Trust is checkable, not taken on faith.", es: "Aria re-verifica de forma independiente. La confianza es comprobable, no un acto de fe." }
+      },
+      branch: true,
+      hint: { en: "Now Aria decides: accept the work, or open a dispute.", es: "Ahora Aria decide: aceptar el trabajo o abrir una disputa." }
+    }
+  ];
+
+  var OUTCOMES = {
+    release: {
+      state: "completed", nodeClass: "done", nodeLabel: { en: "Completed", es: "Completado" },
+      bal: { agent: 380000, escrow: 0, provider: 120000, stake: 200000 },
+      journal: [ { t: { en: "<b>Escrow</b> → <b>Clínica Verde</b>", es: "<b>Escrow</b> → <b>Clínica Verde</b>" }, m: { en: "settlement, ruling: release", es: "liquidación, fallo: release" }, a: 120000 } ],
+      title: { en: "Settled, the provider is paid", es: "Liquidado, el proveedor cobra" },
+      body: {
+        en: "Aria accepts. Escrow releases atomically to Clínica Verde. The provider's stake is untouched, and its completed GMV now lifts its future exposure cap. A clean loop, end to end.",
+        es: "Aria acepta. El escrow libera de forma atómica a Clínica Verde. El stake del proveedor queda intacto, y su GMV completado ahora eleva su futuro límite de exposición. Un ciclo limpio, de principio a fin."
+      },
+      module: {
+        cls: "good",
+        head: { en: "✓ Engagement completed", es: "✓ Acuerdo completado" },
+        rows: [
+          [{ en: "Clínica Verde paid", es: "Clínica Verde cobra" }, "$1,200.00"],
+          [{ en: "Stake (kept)", es: "Stake (conservado)" }, "$2,000.00"],
+          [{ en: "New exposure cap", es: "Nuevo límite de exposición" }, "$10,600.00"]
+        ],
+        note: { en: "Good work earns more room to work. The ledger still balances to the cent.", es: "El buen trabajo gana más margen para trabajar. El libro sigue cuadrando al centavo." }
+      }
+    },
+    dispute: {
+      state: "resolved", nodeClass: "resolved", nodeLabel: { en: "Resolved", es: "Resuelto" },
+      bal: { agent: 524000, escrow: 0, provider: 0, stake: 176000 },
+      journal: [
+        { t: { en: "<b>Escrow</b> → <b>Aria</b>", es: "<b>Escrow</b> → <b>Aria</b>" }, m: { en: "refund, arbiter ruling", es: "reembolso, fallo del árbitro" }, a: 120000 },
+        { t: { en: "<b>Clínica Verde · stake</b> → <b>Aria</b>", es: "<b>Clínica Verde · stake</b> → <b>Aria</b>" }, m: { en: "stake slashed 20% for 'refund' ruling", es: "slash del 20% del stake por fallo 'refund'" }, a: 24000 }
+      ],
+      title: { en: "Disputed, the stake pays for it", es: "En disputa, el stake lo paga" },
+      body: {
+        en: "Aria opens a dispute; an arbiter rules to refund. Escrow returns to Aria, and 20% of the price is slashed from the provider's stake and paid to Aria as compensation. The provider still has collateral left, so it stays vetted, but it paid for the failure.",
+        es: "Aria abre una disputa; un árbitro falla reembolso. El escrow vuelve a Aria, y el 20% del precio se descuenta (slash) del stake del proveedor y se paga a Aria como compensación. Al proveedor le queda colateral, así que sigue verificado, pero pagó por el fallo."
+      },
+      module: {
+        cls: "warn",
+        head: { en: "⚖ Arbiter ruling: refund", es: "⚖ Fallo del árbitro: reembolso" },
+        rows: [
+          [{ en: "Refunded to Aria", es: "Reembolsado a Aria" }, "$1,200.00"],
+          [{ en: "Slashed from stake (20%)", es: "Slash del stake (20%)" }, "$240.00"],
+          [{ en: "Stake remaining", es: "Stake restante" }, "$1,760.00"]
+        ],
+        note: { en: "Losing costs the provider real money. And still: Σ balances = Σ minted.", es: "Perder le cuesta dinero real al proveedor. Y aun así: Σ saldos = Σ acuñado." }
+      }
+    }
+  };
+
+  var TRACK = [
+    { key: "draft", label: { en: "Draft", es: "Borrador" } },
+    { key: "agreed", label: { en: "Agreed", es: "Acordado" } },
+    { key: "funded", label: { en: "Funded", es: "Financiado" } },
+    { key: "in_progress", label: { en: "In progress", es: "En curso" } },
+    { key: "submitted", label: { en: "Submitted", es: "Entregado" } },
+    { key: "final", label: { en: "Settled", es: "Liquidado" } }
+  ];
+
+  var idx = 0, outcome = null;
+  var prevBal = { agent: 500000, escrow: 0, provider: 0, stake: 200000 };
+  var shownJournal = 0;
+
+  var elTrack = document.getElementById("track");
+  var elAccounts = document.getElementById("accounts");
+  var elJournal = document.getElementById("journal");
+
+  function current() { return idx < STEPS.length ? STEPS[idx] : OUTCOMES[outcome]; }
+
+  ACCTS.forEach(function (ac) {
+    var row = document.createElement("div");
+    row.className = "acct"; row.setAttribute("data-k", ac.k);
+    row.innerHTML =
+      '<div class="arow"><span><span class="an">' + ac.name + '</span> <span class="ak"></span></span>' +
+      '<span><span class="delta" data-delta></span> <span class="bal" data-bal>' + fmt(ac.base) + '</span></span></div>' +
+      '<div class="abar"><i data-fill style="width:' + (ac.base / MINTED * 100) + '%"></i></div>';
+    elAccounts.appendChild(row);
+  });
+
+  /* theme */
+  var themeBtn = document.getElementById("themeBtn");
+  var themeIcon = document.getElementById("themeIcon");
+  var themeLabel = document.getElementById("themeLabel");
+  function systemDark() { return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches; }
+  function isDark() { var th = root.getAttribute("data-theme"); return th ? th === "dark" : systemDark(); }
+  function syncThemeBtn() {
+    var d = isDark();
+    themeIcon.textContent = d ? "☀" : "☾";
+    themeLabel.textContent = d ? t(UI.themeLight) : t(UI.themeDark);
+  }
+  themeBtn.addEventListener("click", function () { root.setAttribute("data-theme", isDark() ? "light" : "dark"); syncThemeBtn(); });
+
+  function animateNumber(el, from, to) {
+    if (reduce || from === to) { el.textContent = fmt(to); return; }
+    var start = null, dur = 520;
+    function tick(ts) {
+      if (!start) start = ts;
+      var p = Math.min((ts - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = fmt(Math.round(from + (to - from) * eased));
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function renderAccounts(bal) {
+    ACCTS.forEach(function (ac) {
+      var row = elAccounts.querySelector('.acct[data-k="' + ac.k + '"]');
+      var to = bal[ac.k], from = prevBal[ac.k];
+      animateNumber(row.querySelector("[data-bal]"), from, to);
+      row.querySelector("[data-fill]").style.width = (to / MINTED * 100) + "%";
+      var d = row.querySelector("[data-delta]");
+      var diff = to - from;
+      if (diff !== 0) {
+        d.textContent = (diff > 0 ? "+" : "−") + fmt(Math.abs(diff));
+        d.className = "delta show " + (diff > 0 ? "up" : "down");
+        setTimeout(function () { d.classList.remove("show"); }, 2200);
+      } else { d.className = "delta"; }
+    });
+  }
+
+  function renderTrack() {
+    var reachedFinal = idx >= STEPS.length;
+    var st = current().state;
+    var order = ["draft", "agreed", "funded", "in_progress", "submitted"];
+    elTrack.innerHTML = "";
+    TRACK.forEach(function (n, i) {
+      var span = document.createElement("span");
+      span.className = "node";
+      var label = t(n.label);
+      if (n.key === "final") {
+        if (reachedFinal) {
+          var o = OUTCOMES[outcome];
+          span.className = "node " + (o.nodeClass === "resolved" ? "resolved" : "done");
+          label = t(o.nodeLabel);
+        }
+      } else {
+        var curPos = reachedFinal ? order.length : order.indexOf(st);
+        if (i < curPos) span.className = "node done";
+        else if (i === curPos && !reachedFinal) span.className = "node active";
+      }
+      span.innerHTML = '<span class="dot"></span>' + label;
+      elTrack.appendChild(span);
+    });
+  }
+
+  function fullJournal() {
+    var list = openingJournal.slice();
+    for (var i = 0; i <= Math.min(idx, STEPS.length - 1); i++) {
+      (STEPS[i].journal || []).forEach(function (j) { list.push(j); });
+    }
+    if (idx >= STEPS.length && outcome) {
+      OUTCOMES[outcome].journal.forEach(function (j) { list.push(j); });
+    }
+    return list;
+  }
+
+  function renderJournal() {
+    var list = fullJournal();
+    for (var k = shownJournal; k < list.length; k++) {
+      var j = list[k];
+      var row = document.createElement("div");
+      row.className = "jrow" + (k >= openingJournal.length ? " enter" : "");
+      row.innerHTML =
+        '<div><div class="jt">' + t(j.t) + (j.mint ? ' <span class="badge-sm mint">' + t(UI.mint) + '</span>' : '') + '</div><div class="jm">' + t(j.m) + '</div></div>' +
+        '<div class="ja">' + fmt(j.a) + '</div>';
+      elJournal.appendChild(row);
+    }
+    shownJournal = list.length;
+    elJournal.scrollTop = elJournal.scrollHeight;
+  }
+
+  function renderModule(mod) {
+    var host = document.getElementById("module");
+    if (!mod) { host.innerHTML = ""; return; }
+    var rows = mod.rows.map(function (r) {
+      return '<div class="kv"><span class="k">' + t(r[0]) + '</span><span class="v">' + t(r[1]) + '</span></div>';
+    }).join("");
+    var meter = mod.meter != null ? '<div class="meter"><span style="width:' + mod.meter + '%"></span></div>' : "";
+    var note = mod.note ? '<div style="margin-top:9px;font-size:12.5px;color:var(--ink-dim)">' + t(mod.note) + '</div>' : "";
+    host.innerHTML = '<div class="module ' + mod.cls + '"><div class="module-head">' + t(mod.head) + '</div><div class="module-body">' + rows + meter + note + '</div></div>';
+  }
+
+  function renderInvariant() {
+    var bal = current().bal;
+    var sum = bal.agent + bal.escrow + bal.provider + bal.stake;
+    var ok = sum === MINTED;
+    var inv = document.getElementById("invariant");
+    document.getElementById("invLabel").textContent = ok ? t(UI.invOk) : t(UI.invBad);
+    document.getElementById("invSum").textContent = t(UI.invSum) + fmt(sum);
+    if (!reduce) { inv.classList.remove("pulse"); void inv.offsetWidth; inv.classList.add("pulse"); }
+  }
+
+  function mkBtn(label, cls, fn) {
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "btn " + cls; b.textContent = label;
+    b.addEventListener("click", fn);
+    return b;
+  }
+
+  function renderControls() {
+    var host = document.getElementById("controls");
+    var hint = document.getElementById("hint");
+    host.innerHTML = "";
+    if (idx >= STEPS.length) {
+      host.appendChild(mkBtn(t(UI.runAgain), "ghost", reset));
+      var other = outcome === "release" ? "dispute" : "release";
+      host.appendChild(mkBtn(other === "dispute" ? t(UI.seeDispute) : t(UI.seeHappy), "primary", function () { outcome = other; idx = STEPS.length; commit(); }));
+      hint.textContent = t(UI.finalHint);
+      return;
+    }
+    var step = STEPS[idx];
+    if (step.branch) {
+      host.appendChild(mkBtn(t(UI.release), "good", function () { outcome = "release"; idx = STEPS.length; commit(); }));
+      host.appendChild(mkBtn(t(UI.dispute), "ghost", function () { outcome = "dispute"; idx = STEPS.length; commit(); }));
+    } else {
+      host.appendChild(mkBtn(t(step.btn.label), step.btn.cls, function () { idx++; commit(); }));
+    }
+    hint.textContent = t(step.hint) || "";
+  }
+
+  function applyStatic() {
+    document.getElementById("langLabel").textContent = lang === "en" ? "Español" : "English";
+    document.getElementById("restartBtn").textContent = t(UI.restart);
+    syncThemeBtn();
+    document.getElementById("heroEyebrow").textContent = t(UI.heroEyebrow);
+    document.getElementById("heroH1").innerHTML = t(UI.heroA) + '<span class="grad">' + t(UI.heroGrad) + '</span>' + t(UI.heroB);
+    document.getElementById("heroP").textContent = t(UI.heroP);
+    document.getElementById("roleA").textContent = " " + t(UI.roleA);
+    document.getElementById("roleB").textContent = " " + t(UI.roleB);
+    document.getElementById("offerTitle").textContent = t(UI.offerTitle);
+    document.getElementById("offerMeta").textContent = t(UI.offerMeta);
+    document.getElementById("ledgerTitle").textContent = t(UI.ledgerTitle);
+    document.getElementById("journalHead").textContent = t(UI.journalHead);
+    document.getElementById("footerText").innerHTML = t(UI.foot);
+    ACCTS.forEach(function (ac) {
+      elAccounts.querySelector('.acct[data-k="' + ac.k + '"] .ak').textContent = t(ac.kind);
+    });
+    root.lang = lang;
+  }
+
+  function commit() {
+    var step = current();
+    document.getElementById("narrStep").textContent =
+      idx >= STEPS.length ? t(UI.outcome) : t(UI.stepOf).replace("%1", idx + 1).replace("%2", STEPS.length);
+    document.getElementById("narrTitle").textContent = t(step.title);
+    document.getElementById("narrBody").innerHTML = t(step.body);
+    renderModule(step.module);
+    renderTrack();
+    renderInvariant();
+    renderJournal();
+    renderAccounts(step.bal);
+    renderControls();
+    prevBal = { agent: step.bal.agent, escrow: step.bal.escrow, provider: step.bal.provider, stake: step.bal.stake };
+  }
+
+  function resetBalancesDom() {
+    ACCTS.forEach(function (ac) {
+      var row = elAccounts.querySelector('.acct[data-k="' + ac.k + '"]');
+      row.querySelector("[data-bal]").textContent = fmt(ac.base);
+      row.querySelector("[data-fill]").style.width = (ac.base / MINTED * 100) + "%";
+    });
+  }
+
+  function reset() {
+    idx = 0; outcome = null; shownJournal = 0;
+    prevBal = { agent: 500000, escrow: 0, provider: 0, stake: 200000 };
+    elJournal.innerHTML = "";
+    resetBalancesDom();
+    applyStatic();
+    commit();
+  }
+
+  document.getElementById("restartBtn").addEventListener("click", reset);
+  document.getElementById("langBtn").addEventListener("click", function () {
+    lang = lang === "en" ? "es" : "en";
+    elJournal.innerHTML = ""; shownJournal = 0;   // re-render journal in the new language
+    applyStatic();
+    commit();
+  });
+
+  reset();
+})();
+</script>
+
+</body>
+</html>
