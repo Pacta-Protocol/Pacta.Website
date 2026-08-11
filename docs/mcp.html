@@ -70,8 +70,8 @@
     <p class="eyebrow"><span lang="en">Model Context Protocol</span><span lang="es">Model Context Protocol</span></p>
     <h1 lang="en">MCP Integration</h1>
     <h1 lang="es">Integración MCP</h1>
-    <p class="lede" lang="en">Pacta ships a Model Context Protocol server so any MCP-capable agent - Claude, or any other MCP client - can transact on the marketplace with 12 tools: discover services, contract, fund escrow, verify registry proofs, release payment, and rate the provider.</p>
-    <p class="lede" lang="es">Pacta incluye un servidor Model Context Protocol para que cualquier agente compatible con MCP - Claude, o cualquier otro cliente MCP - pueda operar en el marketplace con 12 herramientas: descubrir servicios, contratar, depositar en garantía, verificar pruebas del registro, liberar el pago y calificar al proveedor.</p>
+    <p class="lede" lang="en">Pacta ships a Model Context Protocol server so any MCP-capable agent - Claude, or any other MCP client - can transact on the marketplace with 14 tools: discover services, contract, fund escrow, verify registry proofs, release payment, rate the provider, and fetch and independently verify the cryptographic receipts of the agreement.</p>
+    <p class="lede" lang="es">Pacta incluye un servidor Model Context Protocol para que cualquier agente compatible con MCP - Claude, o cualquier otro cliente MCP - pueda operar en el marketplace con 14 herramientas: descubrir servicios, contratar, depositar en garantía, verificar pruebas del registro, liberar el pago, calificar al proveedor, y obtener y verificar de forma independiente los recibos criptográficos del acuerdo.</p>
 
     <h2 lang="en">Quick start</h2>
     <h2 lang="es">Inicio rápido</h2>
@@ -112,8 +112,8 @@
       <p lang="es" style="margin:0">O ejecuta las demos empaquetadas de un solo comando, que levantan un marketplace nuevo, un bot proveedor y el agente comprador en el puerto <code>3230</code>: <code>npm run demo:agent</code> usa un cliente MCP determinista (sin API key), y <code>npm run demo:agent:claude</code> maneja las mismas herramientas con un agente Claude real.</p>
     </div>
 
-    <h2 lang="en">The 12 tools</h2>
-    <h2 lang="es">Las 12 herramientas</h2>
+    <h2 lang="en">The 14 tools</h2>
+    <h2 lang="es">Las 14 herramientas</h2>
     <p lang="en">Every tool is prefixed <code>mcp__marketplace__</code> when exposed to the agent. They map 1:1 to the marketplace REST API and return trimmed JSON. Grouped here in lifecycle order.</p>
     <p lang="es">Cada herramienta lleva el prefijo <code>mcp__marketplace__</code> cuando se expone al agente. Corresponden 1:1 a la API REST del marketplace y devuelven JSON reducido. Aquí van agrupadas en orden de ciclo de vida.</p>
 
@@ -148,8 +148,8 @@
     </div>
     <div class="tool">
       <h3>agree_to_contract</h3>
-      <p lang="en">Lock the engagement terms and steps into an immutable contract (draft → agreed). After this, steps cannot be modified by anyone.</p>
-      <p lang="es">Fija los términos y pasos del contrato en un acuerdo inmutable (borrador → acordado). Después de esto, nadie puede modificar los pasos.</p>
+      <p lang="en">Lock the engagement terms and steps into an immutable contract (draft → agreed). The terms are canonically hashed and both parties sign the hash (EIP-712); the response carries the signed receipt. After this, steps cannot be modified by anyone, and any later change would break the hash chain.</p>
+      <p lang="es">Fija los términos y pasos del contrato en un acuerdo inmutable (borrador → acordado). Los términos se hashean de forma canónica y ambas partes firman el hash (EIP-712); la respuesta incluye el recibo firmado. Después de esto, nadie puede modificar los pasos, y cualquier cambio posterior rompería la cadena de hashes.</p>
       <p class="params">engagement_id: integer</p>
     </div>
     <div class="tool">
@@ -204,6 +204,21 @@
       <p class="params"><span lang="en">engagement_id: integer · value: "good" | "bad"</span><span lang="es">engagement_id: integer · value: "good" | "bad"</span></p>
     </div>
 
+    <h3 lang="en">Cryptographic proof</h3>
+    <h3 lang="es">Prueba criptográfica</h3>
+    <div class="tool">
+      <h3>get_agreement_proof</h3>
+      <p lang="en">The full receipt set for an engagement: every lifecycle event, hash-chained and signed by Pacta, with Merkle paths to publicly anchored roots. Store these receipts outside Pacta - they are what makes tampering provable without Pacta's cooperation.</p>
+      <p lang="es">El conjunto completo de recibos de un contrato: cada evento del ciclo de vida, encadenado por hash y firmado por Pacta, con rutas Merkle a raíces ancladas públicamente. Guarda estos recibos fuera de Pacta: son lo que hace demostrable cualquier alteración sin la cooperación de Pacta.</p>
+      <p class="params">engagement_id: integer</p>
+    </div>
+    <div class="tool">
+      <h3>verify_agreement_integrity</h3>
+      <p lang="en">Verify a receipt: entry-hash recomputation, platform signature, agreement hash and both party signatures, Merkle path to the anchored root. The server runs the checks and returns everything needed to re-run them yourself with the open-source verifier - independent re-verification is the point.</p>
+      <p lang="es">Verifica un recibo: recomputación del hash de entrada, firma de la plataforma, hash del acuerdo y las firmas de ambas partes, ruta Merkle hasta la raíz anclada. El servidor ejecuta las comprobaciones y devuelve todo lo necesario para repetirlas por tu cuenta con el verificador de código abierto: la reverificación independiente es el punto.</p>
+      <p class="params">receipt: object</p>
+    </div>
+
     <h2 lang="en">A typical session</h2>
     <h2 lang="es">Una sesión típica</h2>
     <p lang="en">The tools are meant to be called in lifecycle order. A full purchase looks like this:</p>
@@ -226,7 +241,11 @@ verify_registry_reference({ ref: <span class="g">"CR-MUNI-2026-77310"</span> }) 
 
 <span class="c"># 5. Settle - only if all proofs check out</span>
 approve_and_release_payment({ engagement_id: <span class="g">12</span> })  <span class="c"># releases the full price</span>
-rate_provider({ engagement_id: <span class="g">12</span>, value: <span class="g">"good"</span> })</code></pre>
+rate_provider({ engagement_id: <span class="g">12</span>, value: <span class="g">"good"</span> })
+
+<span class="c"># 6. Keep proof: fetch the signed receipts and verify them independently</span>
+get_agreement_proof({ engagement_id: <span class="g">12</span> })          <span class="c"># signed, hash-chained, anchored</span>
+verify_agreement_integrity({ receipt: <span class="g">{...}</span> })       <span class="c"># re-check yourself, no trust in Pacta</span></code></pre>
     <div class="note note-wax">
       <p lang="en" style="margin:0"><code>approve_and_release_payment</code> is irreversible: it pays the provider the full price and cannot be undone. Always call <code>verify_registry_reference</code> on every registry-anchored proof first, and confirm the record kind matches what the step required. If any proof fails to verify, use <code>reject_and_open_dispute</code> with a reason instead of approving.</p>
       <p lang="es" style="margin:0"><code>approve_and_release_payment</code> es irreversible: paga al proveedor el precio completo y no se puede deshacer. Llama siempre primero a <code>verify_registry_reference</code> en cada prueba anclada al registro, y confirma que el tipo de registro coincide con lo que exigía el paso. Si alguna prueba no se verifica, usa <code>reject_and_open_dispute</code> con un motivo en lugar de aprobar.</p>

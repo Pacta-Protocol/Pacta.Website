@@ -36,7 +36,8 @@
       { "@type": "Question", "name": "How is work proven?", "acceptedAnswer": { "@type": "Answer", "text": "Fulfillment steps can require registry-anchored proof: a reference into an official public registry such as a company registry, municipal permits, or the tax authority. The platform checks that the record exists and that its kind matches what the step asked for, and the buying agent can re-verify it independently before releasing payment." } },
       { "@type": "Question", "name": "Can my AI agent really use this autonomously?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Agents connect over the Model Context Protocol and drive the whole loop, shop, agree, fund, verify, and release, without a human clicking. In the bundled demo, the Claude-driven agent chose a staked provider over a cheaper one with zero collateral and re-verified four registry references before paying." } },
       { "@type": "Question", "name": "What happens in a dispute?", "acceptedAnswer": { "@type": "Answer", "text": "A disputed engagement goes to a neutral arbiter, who reviews the delivery and the proof and issues one of three rulings: release, refund, or split. The ruling both settles the escrow and decides the slash, so the losing provider risks its stake." } },
-      { "@type": "Question", "name": "Where does the money live?", "acceptedAnswer": { "@type": "Answer", "text": "On a double-entry ledger inside the platform, denominated in simulated USD and stored as integer cents, so there is no rounding drift. Every movement debits one account and credits another, so the books always balance. The dollars are fictional in this proof of concept; the accounting that governs them is real." } }
+      { "@type": "Question", "name": "Where does the money live?", "acceptedAnswer": { "@type": "Answer", "text": "On a double-entry ledger inside the platform, denominated in simulated USD and stored as integer cents, so there is no rounding drift. Every movement debits one account and credits another, so the books always balance. The dollars are fictional in this proof of concept; the accounting that governs them is real." } },
+      { "@type": "Question", "name": "Do you use a blockchain? Can Pacta rewrite history?", "acceptedAnswer": { "@type": "Answer", "text": "Only where it earns its place. Funds are not on-chain; they stay on Pacta's audited internal ledger. But every agreement is dually signed and every lifecycle event is written to a hash-chained log whose Merkle roots are anchored publicly, and both parties get signed receipts. An open-source verifier lets anyone confirm the history, or prove tampering, without Pacta's help. Honest status: anchoring runs against a deterministic local adapter by default, and anchoring to a public L2 testnet is built and one config change away, next on the roadmap. We call this tamper-evident and independently verifiable, not trustless." } }
     ]
   }
   </script>
@@ -236,15 +237,28 @@
       </details>
 
       <details class="faq" lang="en">
+        <summary>Do you use a blockchain? Can Pacta rewrite history?</summary>
+        <div class="a">
+          <p>Only where it earns its place. Funds are not on-chain; they stay on Pacta's audited internal ledger. But every agreement is dually signed and every lifecycle event is written to a hash-chained log whose Merkle roots are anchored publicly, and both parties get signed receipts. An <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/tree/main/packages/verifier">open-source verifier</a> lets anyone confirm the history, or prove tampering, without our help. Honest status: anchoring runs against a deterministic local adapter by default, and anchoring to a public L2 testnet is built and one config change away - it is the next step on our roadmap. We call this tamper-evident and independently verifiable, not trustless. The full decision is written up in <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/docs/adr/001-cryptographic-immutability.md">ADR-001</a>.</p>
+        </div>
+      </details>
+      <details class="faq" lang="es">
+        <summary>¿Usan blockchain? ¿Puede Pacta reescribir el historial?</summary>
+        <div class="a">
+          <p>Solo donde aporta. Los fondos no están on-chain; viven en el libro contable interno auditado de Pacta. Pero cada acuerdo lo firman ambas partes y cada evento del ciclo de vida se escribe en un registro encadenado por hash cuyas raíces Merkle se anclan a una cadena pública, y ambas partes reciben recibos firmados. Un <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/tree/main/packages/verifier">verificador de código abierto</a> permite que cualquiera confirme el historial, o demuestre una alteración, sin nuestra ayuda. Lo llamamos a prueba de alteraciones y verificable de forma independiente, no "trustless". La decisión completa está en <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/docs/adr/001-cryptographic-immutability.md">ADR-001</a>.</p>
+        </div>
+      </details>
+
+      <details class="faq" lang="en">
         <summary>What's next on the roadmap?</summary>
         <div class="a">
-          <p>The honest answer: this is a proof of concept, and the next steps are the ones that make it real. Real payment rails in place of the simulated ledger, live registry APIs in place of the demo record set, and more countries and service verticals beyond the Costa Rican sample. The mechanics are built and tested; what remains is connecting them to the outside world.</p>
+          <p>The honest answer: this is a proof of concept, and the next steps are the ones that make it real. Cryptographic agreement immutability now ships - dually signed agreements, a hash-chained event log, signed receipts, and an independent verifier. What remains: anchoring the log's Merkle roots to a public L2 testnet (the anchoring runs against a deterministic local adapter today and the real-chain adapter is one config change away), real payment rails in place of the simulated ledger, live registry APIs in place of the demo record set, and more countries and service verticals beyond the Costa Rican sample. Custody of funds is deliberately deferred: it stays on the internal ledger until real users tell us platform custody is what blocks them, at which point a minimal non-custodial escrow vault (already designed) ships.</p>
         </div>
       </details>
       <details class="faq" lang="es">
         <summary>¿Qué sigue en el roadmap?</summary>
         <div class="a">
-          <p>La respuesta honesta: esto es una prueba de concepto, y los siguientes pasos son los que la vuelven real. Rieles de pago reales en lugar del libro simulado, APIs de registro en vivo en lugar del conjunto de registros del demo, y más países y verticales de servicio más allá de la muestra costarricense. La mecánica está construida y probada; lo que falta es conectarla con el mundo exterior.</p>
+          <p>La respuesta honesta: esto es una prueba de concepto, y los siguientes pasos son los que la vuelven real. La inmutabilidad criptográfica de los acuerdos ya está publicada - acuerdos firmados por ambas partes, un registro de eventos encadenado por hash, recibos firmados y un verificador independiente. Lo que falta: anclar las raíces Merkle del registro a una testnet L2 pública (hoy el anclaje corre contra un adaptador local determinista y el adaptador de cadena real está a un cambio de configuración de distancia), rieles de pago reales en lugar del libro simulado, APIs de registro en vivo en lugar del conjunto de registros del demo, y más países y verticales de servicio más allá de la muestra costarricense. La custodia de fondos se difiere a propósito: permanece en el libro interno hasta que usuarios reales nos digan que la custodia de la plataforma es lo que los frena, momento en el que se publicará una bóveda de garantía no custodial mínima (ya diseñada).</p>
         </div>
       </details>
 

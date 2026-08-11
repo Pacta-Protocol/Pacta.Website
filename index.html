@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pacta Protocol - The trust layer for AI that does real business</title>
-  <meta name="description" content="Pacta Protocol lets AI agents hire real, licensed, collateral-backed businesses - escrowed payment, registry-verified work, agreements that enforce themselves. Native MCP server with 12 tools.">
+  <meta name="description" content="Pacta Protocol lets AI agents hire real, licensed, collateral-backed businesses - escrowed payment, registry-verified work, agreements that enforce themselves and a cryptographically verifiable history. Native MCP server with 14 tools.">
   <link rel="canonical" href="https://pactaprotocol.org/">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://pactaprotocol.org/">
@@ -144,12 +144,12 @@
       <div>
         <h2 lang="en">MCP-first protocol design.</h2>
         <h2 lang="es">Diseño de protocolo MCP primero.</h2>
-        <p class="lede" lang="en">Pacta ships a Model Context Protocol server with 12 tools covering the full lifecycle - search, contract, escrow, verify, pay, rate. Your agent already knows how to use it. No prompt tuning, no custom SDK.</p>
-        <p class="lede" lang="es">Pacta incluye un servidor Model Context Protocol con 12 herramientas que cubren todo el ciclo - buscar, contratar, custodiar, verificar, pagar, calificar. Tu agente ya sabe usarlo. Sin ajuste de prompts ni SDK propietario.</p>
+        <p class="lede" lang="en">Pacta ships a Model Context Protocol server with 14 tools covering the full lifecycle - search, contract, escrow, verify, pay, rate, and fetch and verify the cryptographic receipts. Your agent already knows how to use it. No prompt tuning, no custom SDK.</p>
+        <p class="lede" lang="es">Pacta incluye un servidor Model Context Protocol con 14 herramientas que cubren todo el ciclo - buscar, contratar, custodiar, verificar, pagar, calificar, y obtener y verificar los recibos criptográficos. Tu agente ya sabe usarlo. Sin ajuste de prompts ni SDK propietario.</p>
         <ul class="check-list">
           <li>
             <span class="ck"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 8.5 15 16 5"/></svg></span>
-            <span><strong lang="en">12 tools, 1:1 with the REST API.</strong><strong lang="es">12 herramientas, 1:1 con la API REST.</strong> <span lang="en">Discover, contract, fund escrow, verify, settle, rate.</span><span lang="es">Descubrir, contratar, custodiar, verificar, liquidar, calificar.</span></span>
+            <span><strong lang="en">14 tools, 1:1 with the REST API.</strong><strong lang="es">14 herramientas, 1:1 con la API REST.</strong> <span lang="en">Discover, contract, fund escrow, verify, settle, rate, and prove.</span><span lang="es">Descubrir, contratar, custodiar, verificar, liquidar, calificar y probar.</span></span>
           </li>
           <li>
             <span class="ck"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 8.5 15 16 5"/></svg></span>
@@ -277,8 +277,8 @@ npm run start:pacta
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><path d="M9 13h6M9 17h4"/></svg>
         </div>
         <h3 lang="en">Contract</h3><h3 lang="es">Contratar</h3>
-        <p lang="en">Terms lock into a programmatic, immutable contract.</p>
-        <p lang="es">Los términos se fijan en un contrato programático e inmutable.</p>
+        <p lang="en">Both parties cryptographically sign the terms; they lock into an immutable, hash-chained record.</p>
+        <p lang="es">Ambas partes firman los términos criptográficamente; quedan fijos en un registro inmutable y encadenado por hash.</p>
       </div>
       <div class="pipe-step">
         <div class="pipe-icon">
@@ -321,6 +321,11 @@ npm run start:pacta
         <h3><span class="ic">◆</span><span lang="en">Registry proof</span><span lang="es">Prueba de registro</span></h3>
         <p lang="en">Fulfillment steps can require a reference into an official public registry. The platform checks the record exists and its kind matches; the buying agent can re-verify independently before paying.</p>
         <p lang="es">Los pasos de cumplimiento pueden exigir una referencia a un registro público oficial. La plataforma comprueba que el registro existe y que su tipo coincide; el agente comprador puede reverificar de forma independiente antes de pagar.</p>
+      </div>
+      <div class="mech-card">
+        <h3><span class="ic">◆</span><span lang="en">Tamper-evident record</span><span lang="es">Registro a prueba de alteraciones</span></h3>
+        <p lang="en">Every agreement is canonically hashed and signed by both parties, and every lifecycle event is written to a hash-chained log whose roots are anchored to a public chain. Each party keeps signed receipts an open-source verifier can check independently, so the history is provable even against us.</p>
+        <p lang="es">Cada acuerdo se hashea de forma canónica y lo firman ambas partes, y cada evento del ciclo de vida se escribe en un registro encadenado por hash cuyas raíces se anclan a una cadena pública. Cada parte guarda recibos firmados que un verificador de código abierto puede comprobar por su cuenta, así que el historial es demostrable incluso frente a nosotros.</p>
       </div>
     </div>
   </div>
@@ -457,10 +462,17 @@ npm run start:pacta
         </div>
       </details>
       <details class="faq">
+        <summary><span lang="en">Do you use a blockchain? Can Pacta rewrite history?</span><span lang="es">¿Usan blockchain? ¿Puede Pacta reescribir el historial?</span></summary>
+        <div class="a">
+          <p lang="en">Only where it earns its place. Funds are not on-chain; they stay on Pacta's audited internal ledger. But every agreement is dually signed and every event is written to a hash-chained log whose Merkle roots are anchored publicly, and both parties get signed receipts. An open-source verifier lets anyone confirm the history, or prove tampering, without our help. Honest status: anchoring runs against a deterministic local adapter by default, and anchoring to a public L2 testnet is built and one config change away - it is the next step on our roadmap. We call this tamper-evident and independently verifiable, not trustless.</p>
+          <p lang="es">Solo donde aporta. Los fondos no están on-chain; viven en el libro contable interno auditado de Pacta. Pero cada acuerdo lo firman ambas partes y cada evento se escribe en un registro encadenado por hash cuyas raíces Merkle se anclan públicamente, y ambas partes reciben recibos firmados. Un verificador de código abierto permite que cualquiera confirme el historial, o demuestre una alteración, sin nuestra ayuda. Estado honesto: el anclaje corre por defecto contra un adaptador local determinista, y el anclaje a una testnet L2 pública ya está construido y a un cambio de configuración de distancia - es el siguiente paso en nuestro roadmap. Lo llamamos a prueba de alteraciones y verificable de forma independiente, no "trustless".</p>
+        </div>
+      </details>
+      <details class="faq">
         <summary><span lang="en">Can my AI agent really use this on its own?</span><span lang="es">¿De verdad mi agente de IA puede usar esto solo?</span></summary>
         <div class="a">
-          <p lang="en">Yes. Pacta is MCP-first: 12 tools cover the whole lifecycle. In our recorded demo a Claude agent searched, contracted, escrowed, waited for delivery, verified 4 registry references independently, paid $5,000, and rated the provider - with an 8/8 independent audit at the end.</p>
-          <p lang="es">Sí. Pacta es MCP primero: 12 herramientas cubren todo el ciclo. En nuestro demo grabado, un agente Claude buscó, contrató, fondeó la custodia, esperó la entrega, verificó 4 referencias registrales por su cuenta, pagó $5,000 y calificó al proveedor - con una auditoría independiente de 8/8 al final.</p>
+          <p lang="en">Yes. Pacta is MCP-first: 14 tools cover the whole lifecycle. In our recorded demo a Claude agent searched, contracted, escrowed, waited for delivery, verified 4 registry references independently, paid $5,000, and rated the provider - with an 8/8 independent audit at the end.</p>
+          <p lang="es">Sí. Pacta es MCP primero: 14 herramientas cubren todo el ciclo. En nuestro demo grabado, un agente Claude buscó, contrató, fondeó la custodia, esperó la entrega, verificó 4 referencias registrales por su cuenta, pagó $5,000 y calificó al proveedor - con una auditoría independiente de 8/8 al final.</p>
         </div>
       </details>
       <details class="faq">

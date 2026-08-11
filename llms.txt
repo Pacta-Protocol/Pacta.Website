@@ -2,19 +2,20 @@
 
 > The trust layer for AI that does real business. Pacta Protocol lets AI agents hire real, licensed, collateral-backed businesses under contracts that enforce themselves - payment held in escrow, work proven against official public registries, and disputes settled by a neutral arbiter.
 
-Pacta Protocol is MCP-first: it ships a Model Context Protocol server with 12 tools covering the full lifecycle (discover, contract, fund escrow, verify, settle, rate), so any MCP-capable agent can transact end to end without prompt tuning or a custom SDK. It is a working proof of concept - the demo firms and money are fictional, but the mechanics (double-entry ledger, escrow, staking, slashing, registry verification, the MCP server) are fully implemented and tested. The stack has three tiers: the protocol itself (infrastructure), a reference marketplace explorer (the hosted app), and example vertical apps built on top - LandBridge, a cross-border real-estate copilot that runs a full land-purchase due diligence through the MCP tools, including catching a fraudulent registry proof, demonstrates the pattern.
+Pacta Protocol is MCP-first: it ships a Model Context Protocol server with 14 tools covering the full lifecycle (discover, contract, fund escrow, verify, settle, rate, and fetch and verify the cryptographic receipts of the agreement), so any MCP-capable agent can transact end to end without prompt tuning or a custom SDK. It is a working proof of concept - the demo firms and money are fictional, but the mechanics (double-entry ledger, escrow, staking, slashing, registry verification, the MCP server, and cryptographic agreement immutability with a hash-chained event log anchored to a public chain and an independent verifier) are fully implemented and tested. The stack has three tiers: the protocol itself (infrastructure), a reference marketplace explorer (the hosted app), and example vertical apps built on top - LandBridge, a cross-border real-estate copilot that runs a full land-purchase due diligence through the MCP tools, including catching a fraudulent registry proof, demonstrates the pattern.
 
 How trust is manufactured:
 - Stake: providers post real collateral to become "vetted"; the badge holds only while the stake is above zero, and open work is capped relative to stake and proven track record.
 - Escrow: the buyer's money moves into a per-engagement escrow account on a double-entry, integer-cents ledger; neither side can touch it until work is verified.
 - Registry proof: fulfillment steps reference official public registries; the buying agent re-verifies each proof before releasing payment.
 - Slashing: losing a dispute slashes the provider's stake (20% on a full refund, 10% on a split); a stake drained to $0 loses vetted status automatically.
+- Immutability: every agreement is canonically hashed (RFC 8785) and signed by both parties (EIP-712); every event is hash-chained and anchored to a public chain; both parties hold signed receipts an open-source verifier can check without Pacta. Funds stay off-chain on the internal ledger by design; on-chain custody is a triggered roadmap item.
 
 ## Key pages
 - [Homepage](https://pactaprotocol.org/): what Pacta Protocol is, for agents and for businesses.
 - [Interactive walkthrough](https://pactaprotocol.org/demo.html): a bilingual in-browser demo of the full flow - escrow, staking, registry-verified proofs and the live double-entry ledger invariant.
 - [Getting started](https://pactaprotocol.org/docs/index.html): run it locally in two commands; the three roles; the lifecycle; the trust model.
-- [MCP integration](https://pactaprotocol.org/docs/mcp.html): the 12 Model Context Protocol tools, config, and a full purchase session.
+- [MCP integration](https://pactaprotocol.org/docs/mcp.html): the 14 Model Context Protocol tools, config, and a full purchase session.
 - [The game theory of vetting](https://pactaprotocol.org/docs/vetting.html): why the Vetted badge needs no verification department - staked collateral, graduated exposure caps and slashing make honesty the most profitable strategy.
 - [Impact](https://pactaprotocol.org/docs/impact.html): who benefits (small businesses in underserved markets reaching AI-agent demand), the auditable metrics that count it, and the planned 12-week pilot in Guanacaste, Costa Rica.
 - [Case studies](https://pactaprotocol.org/docs/cases.html): three reproducible demonstrations told as stories - land purchase without scams in Costa Rica, patient-safety verification in Colombia, and a smallholder coffee export in Brazil - each ending with the command that reproduces it.
@@ -25,6 +26,8 @@ How trust is manufactured:
 - App: https://app.pactaprotocol.org/
 - Source: https://github.com/Pacta-Protocol
 - Roadmap (real registry adapters, production hardening, settlement modules): https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/ROADMAP.md
+- Cryptographic immutability decision record (ADR-001, Phase 0): https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/docs/adr/001-cryptographic-immutability.md
+- Independent receipt verifier (open source, zero backend dependencies): https://github.com/Pacta-Protocol/Pacta.Protocol/tree/main/packages/verifier
 - Example app (LandBridge, cross-border real estate on the MCP surface): https://github.com/Pacta-Protocol/Pacta.Example.RealEstate
 - Example app (MedVoyage, a Sentient ROMA agent forming a medical-tourism company in Colombia over the same MCP surface): https://github.com/Pacta-Protocol/Pacta.Example.RomaBuyer
 - Example app (Boa Vista, a scripted buyer verifying a Brazilian coffee harvest - agronomist, accredited lab and export certificate - over the same MCP surface): https://github.com/Pacta-Protocol/Pacta.Example.Agro

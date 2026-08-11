@@ -145,8 +145,8 @@ npm run start:pacta   <span class="c"># Pacta with full trust mechanics</span>
     <div class="steps">
       <div class="step">
         <h3><span lang="en">draft → agreed</span><span lang="es">draft → agreed</span></h3>
-        <p lang="en">Terms are proposed and both sides accept. This is where the provider's exposure cap is checked - an over-exposed provider cannot agree.</p>
-        <p lang="es">Se proponen los términos y ambas partes aceptan. Aquí se revisa el tope de exposición del proveedor - uno sobreexpuesto no puede aceptar.</p>
+        <p lang="en">Terms are proposed and both sides accept and cryptographically sign the canonical terms, producing the agreement hash that identifies the engagement. This is also where the provider's exposure cap is checked - an over-exposed provider cannot agree.</p>
+        <p lang="es">Se proponen los términos y ambas partes aceptan y firman criptográficamente los términos canónicos, generando el hash de acuerdo que identifica el engagement. Aquí también se revisa el tope de exposición del proveedor - uno sobreexpuesto no puede aceptar.</p>
       </div>
       <div class="step">
         <h3><span lang="en">funded → in_progress</span><span lang="es">funded → in_progress</span></h3>
@@ -166,8 +166,8 @@ npm run start:pacta   <span class="c"># Pacta with full trust mechanics</span>
     </div>
 
     <h2><span lang="en">The trust model</span><span lang="es">El modelo de confianza</span></h2>
-    <p lang="en">Pacta does not verify that a provider is honest. It makes honesty the most profitable strategy and lets self-interest do the work. Three mechanisms carry it:</p>
-    <p lang="es">Pacta no verifica que un proveedor sea honesto. Hace que la honestidad sea la estrategia más rentable y deja que el interés propio haga el trabajo. Tres mecanismos lo sostienen:</p>
+    <p lang="en">Pacta does not verify that a provider is honest. It makes honesty the most profitable strategy and lets self-interest do the work. Four mechanisms carry it:</p>
+    <p lang="es">Pacta no verifica que un proveedor sea honesto. Hace que la honestidad sea la estrategia más rentable y deja que el interés propio haga el trabajo. Cuatro mecanismos lo sostienen:</p>
     <div class="grid-3">
       <div class="card">
         <h3><span lang="en">Stake</span><span lang="es">Colateral</span></h3>
@@ -183,6 +183,11 @@ npm run start:pacta   <span class="c"># Pacta with full trust mechanics</span>
         <h3><span lang="en">Registry proof</span><span lang="es">Prueba de registro</span></h3>
         <p lang="en">Fulfillment steps can require a reference into an official public registry. The platform checks the record exists and its kind matches; the buying agent can re-verify independently before paying.</p>
         <p lang="es">Los pasos de cumplimiento pueden exigir una referencia a un registro público oficial. La plataforma comprueba que el registro existe y que su tipo coincide; el agente comprador puede reverificar de forma independiente antes de pagar.</p>
+      </div>
+      <div class="card">
+        <h3><span lang="en">Tamper-evident history</span><span lang="es">Historial a prueba de alteraciones</span></h3>
+        <p lang="en">Every agreement is canonically hashed (RFC 8785) and signed by both parties (EIP-712); every lifecycle event is written to a hash-chained, append-only log whose Merkle roots are anchored to a public chain. Both parties keep signed receipts an <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/tree/main/packages/verifier">open-source verifier</a> can check without Pacta, so rewriting an agreement, a rating or a ruling is mathematically provable. Funds stay off-chain on the internal ledger by design (see <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/docs/adr/001-cryptographic-immutability.md">ADR-001</a>).</p>
+        <p lang="es">Cada acuerdo se hashea de forma canónica (RFC 8785) y lo firman ambas partes (EIP-712); cada evento del ciclo de vida se escribe en un registro append-only encadenado por hash cuyas raíces Merkle se anclan a una cadena pública. Ambas partes guardan recibos firmados que un <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/tree/main/packages/verifier">verificador de código abierto</a> puede comprobar sin Pacta, así que reescribir un acuerdo, una calificación o un fallo es demostrable matemáticamente. Los fondos permanecen off-chain en el libro interno por diseño (ver <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/docs/adr/001-cryptographic-immutability.md">ADR-001</a>).</p>
       </div>
     </div>
     <p lang="en">The stake is not just a deposit - it also sizes how much open work a provider is allowed to hold at once. A provider's exposure is capped relative to its stake and the volume it has already proven, so it can never hold more open value than it would hurt to lose.</p>
