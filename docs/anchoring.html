@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Anchoring on Base - Pacta Protocol Docs</title>
+  <meta name="description" content="Every 12 hours Pacta publishes one Merkle root of its agreement log to an AnchorRegistry contract on Base. This is what it proves - history integrity - and what it deliberately does not prove.">
+  <link rel="canonical" href="https://pactaprotocol.org/docs/anchoring.html">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/site.css?v=20260811">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://pactaprotocol.org/" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://pactaprotocol.org/docs/index.html" },
+      { "@type": "ListItem", "position": 3, "name": "Anchoring on Base", "item": "https://pactaprotocol.org/docs/anchoring.html" }
+    ]
+  }
+  </script>
+  <style>
+    /* Anchoring flow diagram - self-contained, theme-follows-site */
+    .anchor-flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 8px 0 8px; }
+    .anchor-flow .stepbox { border: 1px solid rgba(110,123,255,.28); border-radius: 12px; padding: 14px; background: rgba(110,123,255,.05); position: relative; }
+    .anchor-flow .stepbox .n { font-family: var(--mono); font-size: 11px; color: var(--blue-soft); letter-spacing: .04em; }
+    .anchor-flow .stepbox h4 { margin: 6px 0 6px; font-size: 14px; font-weight: 700; }
+    .anchor-flow .stepbox p { font-size: 12.5px; margin: 0; color: var(--ink-dim); }
+    .anchor-flow .stepbox::after { content: "\2192"; position: absolute; right: -11px; top: 50%; transform: translateY(-50%); color: var(--blue-soft); font-weight: 700; z-index: 1; }
+    .anchor-flow .stepbox:last-child::after { content: ""; }
+    @media (max-width: 720px) {
+      .anchor-flow { grid-template-columns: 1fr; }
+      .anchor-flow .stepbox::after { content: "\2193"; right: 50%; top: auto; bottom: -14px; transform: translateX(50%); }
+      .anchor-flow .stepbox:last-child::after { content: ""; }
+    }
+    .kv { width: 100%; border-collapse: collapse; margin: 4px 0 18px; font-size: 14px; }
+    .kv td { border-top: 1px solid var(--hair, rgba(128,128,128,.18)); padding: 9px 10px; vertical-align: top; }
+    .kv td:first-child { color: var(--ink-dim); white-space: nowrap; width: 34%; }
+    .kv code { word-break: break-all; }
+  </style>
+</head>
+<body data-lang="en">
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/index.html" aria-label="Pacta Protocol">
+      <svg viewBox="0 0 100 106" fill="none" stroke="currentColor" stroke-width="8.5" stroke-linecap="butt" stroke-linejoin="round" aria-hidden="true">
+        <path d="M31.5 21 V12 Q31.5 6 37.5 6 H86.5 Q92.5 6 92.5 12 V51 Q92.5 57 86.5 57 H77"/>
+        <path d="M58 57 H37.5 Q31.5 57 31.5 51 V33"/>
+        <path d="M11.5 27 H60.5 Q66.5 27 66.5 33 V72 Q66.5 78 60.5 78 H11.5 Q5.5 78 5.5 72 V33 Q5.5 27 11.5 27 Z"/>
+        <path d="M5.5 76 V102"/>
+      </svg>
+      <span class="brand-word">Pacta<span class="sub">&nbsp;Protocol</span></span>
+    </a>
+    <nav class="nav-links">
+      <a href="/index.html#how"><span lang="en">How it works</span><span lang="es">Cómo funciona</span></a>
+      <a href="/index.html#agents"><span lang="en">For agents (MCP)</span><span lang="es">Para agentes (MCP)</span></a>
+      <a href="/docs/index.html">Docs</a>
+      <a href="/docs/faq.html">FAQ</a>
+    </nav>
+    <div class="nav-right">
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button type="button" data-set-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-set-lang="es" aria-pressed="false">ES</button>
+      </div>
+      <a class="btn btn-primary" href="https://app.pactaprotocol.org/" target="_blank" rel="noopener"><span lang="en">Try Pacta</span><span lang="es">Prueba Pacta</span></a>
+    </div>
+  </div>
+</header>
+
+<div class="docs-layout">
+  <aside class="docs-side">
+    <p class="kicker"><span lang="en">Documentation</span><span lang="es">Documentación</span></p>
+    <nav>
+      <a href="/docs/index.html"><span lang="en">Getting started</span><span lang="es">Primeros pasos</span></a>
+      <a href="/docs/mcp.html"><span lang="en">MCP integration</span><span lang="es">Integración MCP</span></a>
+      <a href="/docs/anchoring.html" aria-current="page"><span lang="en">Anchoring on Base</span><span lang="es">Anclaje en Base</span></a>
+      <a href="/docs/settlement.html"><span lang="en">Settlement backends</span><span lang="es">Backends de liquidación</span></a>
+      <a href="/docs/vetting.html"><span lang="en">Vetting game theory</span><span lang="es">Teoría de juegos</span></a>
+      <a href="/docs/impact.html"><span lang="en">Impact</span><span lang="es">Impacto</span></a>
+      <a href="/docs/cases.html"><span lang="en">Case studies</span><span lang="es">Casos</span></a>
+      <a href="/docs/faq.html">FAQ</a>
+      <a href="/verify.html"><span lang="en">Verify a receipt</span><span lang="es">Verificar un recibo</span></a>
+    </nav>
+  </aside>
+
+  <main class="docs-content">
+    <p class="crumbs"><a href="/index.html"><span lang="en">Home</span><span lang="es">Inicio</span></a><span>/</span><a href="/docs/index.html">Docs</a><span>/</span><span lang="en">Anchoring on Base</span><span lang="es">Anclaje en Base</span></p>
+    <p class="eyebrow"><span lang="en">Cryptographic integrity</span><span lang="es">Integridad criptográfica</span></p>
+    <h1 lang="en">Anchoring on Base</h1>
+    <h1 lang="es">Anclaje en Base</h1>
+    <p class="lede" lang="en">Every 12 hours Pacta publishes a single Merkle root of its agreement log to an <code>AnchorRegistry</code> contract on Base. Once a root is on-chain, no one - not even Pacta - can rewrite a signed agreement, rating, or ruling without it being mathematically detectable by anyone holding a receipt. This is the Certificate Transparency pattern applied to agreements.</p>
+    <p class="lede" lang="es">Cada 12 horas Pacta publica una única raíz Merkle de su registro de acuerdos en un contrato <code>AnchorRegistry</code> en Base. Una vez que la raíz está on-chain, nadie -ni siquiera Pacta- puede reescribir un acuerdo firmado, una calificación o un fallo sin que sea matemáticamente detectable por cualquiera que tenga un recibo. Es el patrón de Certificate Transparency aplicado a los acuerdos.</p>
+
+    <h2 lang="en">How a window becomes an anchor</h2>
+    <h2 lang="es">Cómo una ventana se convierte en anclaje</h2>
+    <div class="anchor-flow" aria-hidden="true">
+      <div class="stepbox"><span class="n">01</span><h4><span lang="en">Signed events</span><span lang="es">Eventos firmados</span></h4><p><span lang="en">Every lifecycle action appends one entry to a hash-chained log.</span><span lang="es">Cada acción del ciclo de vida añade una entrada a un registro encadenado por hash.</span></p></div>
+      <div class="stepbox"><span class="n">02</span><h4><span lang="en">12h window</span><span lang="es">Ventana de 12h</span></h4><p><span lang="en">Entries in <code>(start, end]</code> are collected in <code>seq</code> order.</span><span lang="es">Las entradas en <code>(inicio, fin]</code> se recogen en orden <code>seq</code>.</span></p></div>
+      <div class="stepbox"><span class="n">03</span><h4><span lang="en">Merkle root</span><span lang="es">Raíz Merkle</span></h4><p><span lang="en">One domain-separated SHA-256 root summarizes the whole window.</span><span lang="es">Una raíz SHA-256 con separación de dominio resume toda la ventana.</span></p></div>
+      <div class="stepbox"><span class="n">04</span><h4><span lang="en">Published to Base</span><span lang="es">Publicada en Base</span></h4><p><span lang="en"><code>RootAnchored</code> is emitted on-chain - permanent and public.</span><span lang="es">Se emite <code>RootAnchored</code> on-chain: permanente y público.</span></p></div>
+    </div>
+    <p lang="en">Each party keeps signed receipts that include the Merkle path from their entry up to a published root. Anyone can recompute that path and check it against the root Base recorded. If a single byte of any covered entry ever changed, the recomputed root would no longer match the on-chain one - the tamper is provable without Pacta's cooperation.</p>
+    <p lang="es">Cada parte guarda recibos firmados que incluyen la ruta Merkle desde su entrada hasta una raíz publicada. Cualquiera puede recomputar esa ruta y compararla con la raíz que Base registró. Si un solo byte de cualquier entrada cubierta cambiara, la raíz recomputada ya no coincidiría con la on-chain: la alteración es demostrable sin la cooperación de Pacta.</p>
+
+    <h2 lang="en">What it proves - and what it does not</h2>
+    <h2 lang="es">Qué prueba - y qué no</h2>
+    <p lang="en">Anchoring proves exactly one thing: <strong>the integrity of history</strong>. Given a receipt, it proves the agreement, rating, or ruling it describes existed at anchoring time and has not changed since. That is a real and strong guarantee, and it is the only one anchoring makes.</p>
+    <p lang="es">El anclaje prueba exactamente una cosa: <strong>la integridad del historial</strong>. Dado un recibo, prueba que el acuerdo, la calificación o el fallo que describe existía en el momento del anclaje y no ha cambiado desde entonces. Es una garantía real y fuerte, y es la única que el anclaje ofrece.</p>
+    <div class="note note-wax">
+      <p lang="en"><strong>Anchoring does not prove the underlying registry record is true.</strong> That a company is really incorporated, that a permit was really granted, that a title is really clean - none of that is decided on-chain. The trust root for a land title is the government registry, not a consensus mechanism. Verifying the registry fact stays the buying agent's job: it re-checks each reference against the official public registry (see <a href="/docs/mcp.html"><code>verify_registry_reference</code></a>) before releasing payment. Anchoring makes the <em>record of what everyone agreed and did</em> tamper-evident; it makes no claim about the world outside that record.</p>
+      <p lang="es"><strong>El anclaje no prueba que el registro subyacente sea verdadero.</strong> Que una empresa esté realmente constituida, que un permiso se haya concedido de verdad, que un título esté realmente limpio: nada de eso se decide on-chain. La raíz de confianza de un título de propiedad es el registro público del gobierno, no un mecanismo de consenso. Verificar el hecho registral sigue siendo trabajo del agente comprador: reverifica cada referencia contra el registro público oficial (ver <a href="/docs/mcp.html"><code>verify_registry_reference</code></a>) antes de liberar el pago. El anclaje hace <em>a prueba de alteraciones el registro de lo que todos acordaron e hicieron</em>; no afirma nada sobre el mundo fuera de ese registro.</p>
+    </div>
+
+    <h2 lang="en">Cadence, and why empty windows still anchor</h2>
+    <h2 lang="es">Cadencia, y por qué las ventanas vacías también se anclan</h2>
+    <p lang="en">The anchoring job runs every 12 hours (the interval is configurable) and anchors <strong>every window unconditionally</strong> - even one with no activity. An empty window is published with <code>leafCount = 0</code> and a zero root. There is no skip logic and no separate heartbeat: one code path, one anchor per window, forever.</p>
+    <p lang="es">El trabajo de anclaje corre cada 12 horas (el intervalo es configurable) y ancla <strong>cada ventana sin condiciones</strong>, incluso una sin actividad. Una ventana vacía se publica con <code>leafCount = 0</code> y raíz cero. No hay lógica para omitir ni un latido aparte: un solo camino de código, un anclaje por ventana, siempre.</p>
+    <p lang="en">This makes the on-chain sequence itself the liveness alarm. A regular, gap-free stream of anchors shows the system is alive; a gap would be visible to anyone watching Basescan. Crucially, <strong>a zero-leaf anchor means "no activity in this window", never "hidden activity"</strong> - there is no code path that produces an anchor while concealing entries, because every entry in a window is a leaf in that window's tree.</p>
+    <p lang="es">Esto hace que la propia secuencia on-chain sea la alarma de vida. Un flujo regular y sin huecos de anclajes muestra que el sistema está vivo; un hueco sería visible para cualquiera que mire Basescan. Y algo clave: <strong>un anclaje con cero hojas significa "sin actividad en esta ventana", nunca "actividad oculta"</strong>, porque no existe un camino de código que produzca un anclaje ocultando entradas: cada entrada de una ventana es una hoja del árbol de esa ventana.</p>
+
+    <h2 lang="en">The Merkle construction, precisely</h2>
+    <h2 lang="es">La construcción Merkle, con precisión</h2>
+    <p lang="en">The anchored root is a domain-separated binary SHA-256 Merkle tree over the window's entry hashes. It is documented precisely enough to reimplement a verifier without reading Pacta's source - which is the point.</p>
+    <p lang="es">La raíz anclada es un árbol Merkle binario SHA-256 con separación de dominio sobre los hashes de entrada de la ventana. Está documentada con la precisión suficiente para reimplementar un verificador sin leer el código de Pacta, que es justamente el objetivo.</p>
+    <ul>
+      <li lang="en"><strong>Leaves</strong> are the 32-byte <code>entry_hash</code> values of the entries whose timestamp falls in <code>(windowStart, windowEnd]</code>, ordered by <code>seq</code>.</li>
+      <li lang="es"><strong>Hojas</strong>: los valores <code>entry_hash</code> de 32 bytes de las entradas cuyo timestamp cae en <code>(windowStart, windowEnd]</code>, ordenadas por <code>seq</code>.</li>
+      <li lang="en"><strong>Leaf value</strong> = <code>SHA-256(0x00 || entry_hash)</code> - the raw 32 bytes prefixed with a single <code>0x00</code> domain byte.</li>
+      <li lang="es"><strong>Valor de hoja</strong> = <code>SHA-256(0x00 || entry_hash)</code>: los 32 bytes crudos con un byte de dominio <code>0x00</code> por delante.</li>
+      <li lang="en"><strong>Internal node</strong> = <code>SHA-256(0x01 || left || right)</code> over the two 32-byte child values, prefixed with <code>0x01</code>.</li>
+      <li lang="es"><strong>Nodo interno</strong> = <code>SHA-256(0x01 || izquierda || derecha)</code> sobre los dos valores hijos de 32 bytes, con prefijo <code>0x01</code>.</li>
+      <li lang="en"><strong>Odd level</strong>: duplicate the last node before pairing.</li>
+      <li lang="es"><strong>Nivel impar</strong>: se duplica el último nodo antes de emparejar.</li>
+      <li lang="en"><strong>Single leaf</strong>: the root is that leaf's value. With domain separation a raw <code>entry_hash</code> is never itself a root.</li>
+      <li lang="es"><strong>Hoja única</strong>: la raíz es el valor de esa hoja. Con separación de dominio, un <code>entry_hash</code> crudo nunca es una raíz.</li>
+      <li lang="en"><strong>Empty window</strong>: the root is the zero root (32 zero bytes).</li>
+      <li lang="es"><strong>Ventana vacía</strong>: la raíz es la raíz cero (32 bytes en cero).</li>
+    </ul>
+    <p lang="en">The on-chain event is <code>RootAnchored(uint256 sequence, bytes32 root, uint64 windowStart, uint64 windowEnd, uint32 leafCount)</code>; <code>sequence</code> and <code>root</code> are indexed. A proof is an array of <code>{ hash, pos }</code> siblings walked leaf&rarr;root: start the accumulator at <code>SHA-256(0x00 || entry_hash)</code>, then fold in each sibling with <code>SHA-256(0x01 || &hellip;)</code>, left or right per <code>pos</code>. Two independent implementations are published - the marketplace's <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/src/merkle.js">src/merkle.js</a> and the dependency-free <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/tree/main/packages/verifier">verifier</a>.</p>
+    <p lang="es">El evento on-chain es <code>RootAnchored(uint256 sequence, bytes32 root, uint64 windowStart, uint64 windowEnd, uint32 leafCount)</code>; <code>sequence</code> y <code>root</code> están indexados. Una prueba es un arreglo de hermanos <code>{ hash, pos }</code> recorridos de hoja&rarr;raíz: se parte del acumulador en <code>SHA-256(0x00 || entry_hash)</code> y se combina cada hermano con <code>SHA-256(0x01 || &hellip;)</code>, a izquierda o derecha según <code>pos</code>. Hay dos implementaciones independientes publicadas: <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/src/merkle.js">src/merkle.js</a> del marketplace y el <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/tree/main/packages/verifier">verificador</a> sin dependencias.</p>
+
+    <h2 lang="en">The contract on Base</h2>
+    <h2 lang="es">El contrato en Base</h2>
+    <p lang="en">The <code>AnchorRegistry</code> is deliberately minimal: roots live in events (cheap and permanently retrievable), only a sequence <code>count</code> is stored, a single authorized anchorer writes, and there is no proxy, no upgradeability, and no owner beyond key rotation. It is a transparency log, not an access-control system - the security comes from publication being irreversible, not from who may write.</p>
+    <p lang="es">El <code>AnchorRegistry</code> es deliberadamente mínimo: las raíces viven en eventos (baratos y recuperables para siempre), solo se almacena un contador <code>count</code> de secuencia, escribe un único anchorer autorizado, y no hay proxy, ni actualizabilidad, ni dueño más allá de la rotación de claves. Es un registro de transparencia, no un sistema de control de acceso: la seguridad viene de que la publicación es irreversible, no de quién puede escribir.</p>
+    <table class="kv">
+      <tr><td><span lang="en">Network</span><span lang="es">Red</span></td><td>Base mainnet <code>(chain id 8453)</code></td></tr>
+      <tr><td><span lang="en">Contract</span><span lang="es">Contrato</span></td><td><code>0x866316ae68b297cc2b3ed2daaf3cabd4f5e39de1</code></td></tr>
+      <tr><td>Basescan</td><td><a href="https://basescan.org/address/0x866316ae68b297cc2b3ed2daaf3cabd4f5e39de1" target="_blank" rel="noopener">basescan.org/address/0x866316ae68b297cc2b3ed2daaf3cabd4f5e39de1</a></td></tr>
+      <tr><td><span lang="en">First anchor</span><span lang="es">Primer anclaje</span></td><td><a href="https://basescan.org/tx/0xfbb705b3f764d94aaf00d0d8b0db6f2fd9c5cccb38b67ca90c288fa411037917" target="_blank" rel="noopener">0xfbb705b3…037917</a> <span lang="en">(anchor #0, 11 leaves)</span><span lang="es">(anclaje n.º 0, 11 hojas)</span></td></tr>
+      <tr><td><span lang="en">Cadence</span><span lang="es">Cadencia</span></td><td><span lang="en">one anchor every 12 hours, empty windows included</span><span lang="es">un anclaje cada 12 horas, ventanas vacías incluidas</span></td></tr>
+    </table>
+
+    <h3 lang="en">Deployments</h3>
+    <h3 lang="es">Despliegues</h3>
+    <p lang="en">The same contract runs in two environments. Production anchors real agreement history to Base mainnet; the testnet deployment on Base Sepolia is for integration and CI.</p>
+    <p lang="es">El mismo contrato corre en dos ambientes. Producción ancla el historial de acuerdos real en Base mainnet; el despliegue de testnet en Base Sepolia es para integración y CI.</p>
+    <table class="kv">
+      <tr>
+        <td><span lang="en"><strong>Production</strong> — Base mainnet <code>(8453)</code></span><span lang="es"><strong>Producción</strong> — Base mainnet <code>(8453)</code></span></td>
+        <td><code>0x866316ae68b297cc2b3ed2daaf3cabd4f5e39de1</code><br><a href="https://basescan.org/address/0x866316ae68b297cc2b3ed2daaf3cabd4f5e39de1" target="_blank" rel="noopener">View on Basescan &rarr;</a></td>
+      </tr>
+      <tr>
+        <td><span lang="en"><strong>Testnet</strong> — Base Sepolia <code>(84532)</code></span><span lang="es"><strong>Testnet</strong> — Base Sepolia <code>(84532)</code></span></td>
+        <td><code>0xb1cb4c8d26e2457705f0ffaa823019c2ba0c4fa2</code><br><a href="https://sepolia.basescan.org/address/0xb1cb4c8d26e2457705f0ffaa823019c2ba0c4fa2" target="_blank" rel="noopener">View on Sepolia Basescan &rarr;</a></td>
+      </tr>
+    </table>
+    <div class="note">
+      <p lang="en"><strong>Deployment status.</strong> The <code>AnchorRegistry</code> is live and source-verified on Base mainnet at the address above, and the anchoring service publishes real Merkle roots there every window - the <a href="/index.html#how">live element on the homepage</a> reads the latest root straight from Base. This page shows the production address because there is now a production deployment behind it.</p>
+      <p lang="es"><strong>Estado de despliegue.</strong> El <code>AnchorRegistry</code> está en vivo y con su código verificado en Base mainnet en la dirección de arriba, y el servicio de anclaje publica raíces Merkle reales ahí en cada ventana: el <a href="/index.html#how">elemento en vivo del inicio</a> lee la última raíz directo de Base. Esta página muestra la dirección de producción porque ahora hay un despliegue de producción detrás.</p>
+    </div>
+
+    <h2 lang="en">Verify it yourself</h2>
+    <h2 lang="es">Verifícalo tú mismo</h2>
+    <p lang="en">Verification must be possible <strong>without Pacta</strong>. Paste a receipt into the browser verifier and it recomputes the hash chain and the Merkle path client-side, then checks the root against Base over a public RPC - nothing you paste is sent to a Pacta server, and no Pacta API affects the verdict.</p>
+    <p lang="es">La verificación debe ser posible <strong>sin Pacta</strong>. Pega un recibo en el verificador del navegador: recomputa la cadena de hashes y la ruta Merkle en el cliente, y luego comprueba la raíz contra Base por un RPC público. Nada de lo que pegas se envía a un servidor de Pacta, y ninguna API de Pacta afecta el veredicto.</p>
+    <p><a class="btn btn-primary" href="/verify.html"><span lang="en">Open the verifier &rarr;</span><span lang="es">Abrir el verificador &rarr;</span></a></p>
+    <div class="note">
+      <p lang="en">For the whole picture behind this design, read <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/docs/adr/002-windowed-anchoring-base.md" target="_blank" rel="noopener">ADR-002 (windowed anchoring on Base)</a> and <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/docs/adr/001-cryptographic-immutability.md" target="_blank" rel="noopener">ADR-001 (cryptographic immutability)</a>. The command-line verifier lives in <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/tree/main/packages/verifier" target="_blank" rel="noopener">packages/verifier</a>.</p>
+      <p lang="es">Para el panorama completo detrás de este diseño, lee <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/docs/adr/002-windowed-anchoring-base.md" target="_blank" rel="noopener">ADR-002 (anclaje por ventanas en Base)</a> y <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/docs/adr/001-cryptographic-immutability.md" target="_blank" rel="noopener">ADR-001 (inmutabilidad criptográfica)</a>. El verificador de línea de comandos está en <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/tree/main/packages/verifier" target="_blank" rel="noopener">packages/verifier</a>.</p>
+    </div>
+  </main>
+</div>
+
+<footer class="footer">
+  <div class="wrap footer-cols">
+    <div>
+      <a class="brand" href="/index.html" aria-label="Pacta Protocol">
+        <svg viewBox="0 0 100 106" fill="none" stroke="currentColor" stroke-width="8.5" stroke-linecap="butt" stroke-linejoin="round" aria-hidden="true">
+          <path d="M31.5 21 V12 Q31.5 6 37.5 6 H86.5 Q92.5 6 92.5 12 V51 Q92.5 57 86.5 57 H77"/>
+          <path d="M58 57 H37.5 Q31.5 57 31.5 51 V33"/>
+          <path d="M11.5 27 H60.5 Q66.5 27 66.5 33 V72 Q66.5 78 60.5 78 H11.5 Q5.5 78 5.5 72 V33 Q5.5 27 11.5 27 Z"/>
+          <path d="M5.5 76 V102"/>
+        </svg>
+        <span class="wordmark">Pacta<br>Protocol</span>
+      </a>
+      <p class="tag" lang="en">Agreements that enforce themselves.</p>
+      <p class="tag" lang="es">Pactos que se cumplen por diseño.</p>
+    </div>
+    <div>
+      <h4 lang="en">Product</h4><h4 lang="es">Producto</h4>
+      <a href="https://app.pactaprotocol.org/" target="_blank" rel="noopener"><span lang="en">Try Pacta</span><span lang="es">Prueba Pacta</span></a>
+      <a href="/index.html#how"><span lang="en">How it works</span><span lang="es">Cómo funciona</span></a>
+      <a href="/index.html#registry"><span lang="en">Service registry</span><span lang="es">Registro de servicios</span></a>
+      <a href="/docs/cases.html"><span lang="en">Case studies</span><span lang="es">Casos</span></a>
+    </div>
+    <div>
+      <h4 lang="en">Build</h4><h4 lang="es">Construir</h4>
+      <a href="/docs/index.html"><span lang="en">Getting started</span><span lang="es">Primeros pasos</span></a>
+      <a href="/docs/mcp.html"><span lang="en">MCP integration</span><span lang="es">Integración MCP</span></a>
+      <a href="/docs/anchoring.html"><span lang="en">Anchoring on Base</span><span lang="es">Anclaje en Base</span></a>
+      <a href="/docs/settlement.html"><span lang="en">Settlement backends</span><span lang="es">Backends de liquidación</span></a>
+      <a href="/docs/faq.html">FAQ</a>
+      <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/ROADMAP.md" target="_blank" rel="noopener">Roadmap</a>
+    </div>
+    <div>
+      <h4 lang="en">Project</h4><h4 lang="es">Proyecto</h4>
+      <a href="mailto:hello@pactaprotocol.org"><span lang="en">Contact</span><span lang="es">Contacto</span></a>
+      <a href="/verify.html"><span lang="en">Verify a receipt</span><span lang="es">Verificar un recibo</span></a>
+      <a href="https://github.com/Pacta-Protocol" target="_blank" rel="noopener">GitHub</a>
+      <a lang="en" href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/docs/LITEPAPER.md" target="_blank" rel="noopener">Litepaper</a>
+      <a lang="es" href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/docs/LITEPAPER.es.md" target="_blank" rel="noopener">Litepaper</a>
+    </div>
+  </div>
+  <div class="wrap footer-base">
+    <span lang="en">© 2026 Pacta Protocol · Open source under the MIT License</span>
+    <span lang="es">© 2026 Pacta Protocol · Código abierto bajo licencia MIT</span>
+  </div>
+</footer>
+
+<script src="/assets/config.js"></script>
+<script src="/assets/site.js"></script>
+</body>
+</html>
