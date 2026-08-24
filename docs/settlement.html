@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Settlement backends - Pacta Protocol Docs</title>
+  <meta name="description" content="Pacta moves money through one SettlementBackend interface. Two adapters ship: an internal ledger that needs no chain, and a reference USDC vault on Base. Base first, with a clean seam for others.">
+  <link rel="canonical" href="https://pactaprotocol.org/docs/settlement.html">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/site.css?v=20260811">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://pactaprotocol.org/" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://pactaprotocol.org/docs/index.html" },
+      { "@type": "ListItem", "position": 3, "name": "Settlement backends", "item": "https://pactaprotocol.org/docs/settlement.html" }
+    ]
+  }
+  </script>
+  <style>
+    .kv { width: 100%; border-collapse: collapse; margin: 4px 0 18px; font-size: 14px; }
+    .kv td { border-top: 1px solid var(--hair, rgba(128,128,128,.18)); padding: 9px 10px; vertical-align: top; }
+    .kv td:first-child { color: var(--ink-dim); white-space: nowrap; width: 32%; }
+    .kv code { word-break: break-all; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 6px 0 8px; }
+    @media (max-width: 720px) { .two-col { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body data-lang="en">
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/index.html" aria-label="Pacta Protocol">
+      <svg viewBox="0 0 100 106" fill="none" stroke="currentColor" stroke-width="8.5" stroke-linecap="butt" stroke-linejoin="round" aria-hidden="true">
+        <path d="M31.5 21 V12 Q31.5 6 37.5 6 H86.5 Q92.5 6 92.5 12 V51 Q92.5 57 86.5 57 H77"/>
+        <path d="M58 57 H37.5 Q31.5 57 31.5 51 V33"/>
+        <path d="M11.5 27 H60.5 Q66.5 27 66.5 33 V72 Q66.5 78 60.5 78 H11.5 Q5.5 78 5.5 72 V33 Q5.5 27 11.5 27 Z"/>
+        <path d="M5.5 76 V102"/>
+      </svg>
+      <span class="brand-word">Pacta<span class="sub">&nbsp;Protocol</span></span>
+    </a>
+    <nav class="nav-links">
+      <a href="/index.html#how"><span lang="en">How it works</span><span lang="es">Cómo funciona</span></a>
+      <a href="/index.html#agents"><span lang="en">For agents (MCP)</span><span lang="es">Para agentes (MCP)</span></a>
+      <a href="/docs/index.html">Docs</a>
+      <a href="/docs/faq.html">FAQ</a>
+    </nav>
+    <div class="nav-right">
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button type="button" data-set-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-set-lang="es" aria-pressed="false">ES</button>
+      </div>
+      <a class="btn btn-primary" href="https://app.pactaprotocol.org/" target="_blank" rel="noopener"><span lang="en">Try Pacta</span><span lang="es">Prueba Pacta</span></a>
+    </div>
+  </div>
+</header>
+
+<div class="docs-layout">
+  <aside class="docs-side">
+    <p class="kicker"><span lang="en">Documentation</span><span lang="es">Documentación</span></p>
+    <nav>
+      <a href="/docs/index.html"><span lang="en">Getting started</span><span lang="es">Primeros pasos</span></a>
+      <a href="/docs/mcp.html"><span lang="en">MCP integration</span><span lang="es">Integración MCP</span></a>
+      <a href="/docs/anchoring.html"><span lang="en">Anchoring on Base</span><span lang="es">Anclaje en Base</span></a>
+      <a href="/docs/settlement.html" aria-current="page"><span lang="en">Settlement backends</span><span lang="es">Backends de liquidación</span></a>
+      <a href="/docs/vetting.html"><span lang="en">Vetting game theory</span><span lang="es">Teoría de juegos</span></a>
+      <a href="/docs/impact.html"><span lang="en">Impact</span><span lang="es">Impacto</span></a>
+      <a href="/docs/cases.html"><span lang="en">Case studies</span><span lang="es">Casos</span></a>
+      <a href="/docs/faq.html">FAQ</a>
+      <a href="/verify.html"><span lang="en">Verify a receipt</span><span lang="es">Verificar un recibo</span></a>
+    </nav>
+  </aside>
+
+  <main class="docs-content">
+    <p class="crumbs"><a href="/index.html"><span lang="en">Home</span><span lang="es">Inicio</span></a><span>/</span><a href="/docs/index.html">Docs</a><span>/</span><span lang="en">Settlement backends</span><span lang="es">Backends de liquidación</span></p>
+    <p class="eyebrow"><span lang="en">Ledger-neutral settlement</span><span lang="es">Liquidación neutral de libro</span></p>
+    <h1 lang="en">Settlement backends</h1>
+    <h1 lang="es">Backends de liquidación</h1>
+    <p class="lede" lang="en">Pacta never moves money directly. Escrow, collateral, and slashing all go through a single <code>SettlementBackend</code> interface, and every settlement implementation satisfies it. Base is Pacta's reference settlement network and default on-chain implementation - not a dependency. This is the design in one line: <strong>Base first, with a clean seam for others.</strong></p>
+    <p class="lede" lang="es">Pacta nunca mueve dinero directamente. La custodia, el colateral y el slashing pasan todos por una única interfaz <code>SettlementBackend</code>, y toda implementación de liquidación la satisface. Base es la red de liquidación de referencia de Pacta y su implementación on-chain por defecto, no una dependencia. El diseño en una línea: <strong>Base primero, con una costura limpia para otros.</strong></p>
+
+    <div class="note">
+      <p lang="en">Settlement sits behind an interface because the protocol is MIT-licensed and others will port it - and every port makes the reference implementation more valuable, not less. Registry verification deliberately stays off-chain: the trust root for a land title is the government registry, not a consensus mechanism, and the buying agent re-verifies it independently.</p>
+      <p lang="es">La liquidación vive detrás de una interfaz porque el protocolo es de licencia MIT y otros lo portarán; y cada port hace más valiosa la implementación de referencia, no menos. La verificación del registro se mantiene off-chain a propósito: la raíz de confianza de un título de propiedad es el registro público del gobierno, no un mecanismo de consenso, y el agente comprador la reverifica de forma independiente.</p>
+    </div>
+
+    <h2 lang="en">The interface</h2>
+    <h2 lang="es">La interfaz</h2>
+    <p lang="en">One interface, which the core depends on and every backend implements:</p>
+    <p lang="es">Una interfaz, de la que depende el core y que todo backend implementa:</p>
+<pre><code>interface SettlementBackend {
+  readonly id: string;        <span class="c">// "ledger" | "base-escrow-vault"</span>
+  readonly currency: string;  <span class="c">// "USD"    | "USDC"</span>
+
+  openEscrow({ engagementId, buyer, provider, amountMinor }): EscrowHandle;
+  fund(handle, amountMinor): SettlementReceipt;
+
+  release(handle, authorization): SettlementReceipt;
+  refund(handle, authorization): SettlementReceipt;
+  split(handle, buyerMinor, providerMinor, authorization): SettlementReceipt;
+
+  stakeBalance(provider): bigint;
+  slash(provider, amountMinor, authorization): SettlementReceipt;
+}</code></pre>
+    <p lang="en">Four rules hold in <em>every</em> implementation, and they are what make the seam clean:</p>
+    <p lang="es">Cuatro reglas se cumplen en <em>toda</em> implementación, y son las que mantienen limpia la costura:</p>
+    <ul>
+      <li lang="en"><strong>Integer minor units only.</strong> Amounts cross the interface as integers - USD cents and USDC base units are both integers. No floats, ever.</li>
+      <li lang="es"><strong>Solo unidades menores enteras.</strong> Los montos cruzan la interfaz como enteros: centavos de USD y unidades base de USDC son ambos enteros. Nunca decimales.</li>
+      <li lang="en"><strong>Atomicity.</strong> A release either fully happens or fully does not; callers observe no partial state.</li>
+      <li lang="es"><strong>Atomicidad.</strong> Una liberación ocurre por completo o no ocurre; quien llama no observa estados parciales.</li>
+      <li lang="en"><strong>Authorization is data, not identity.</strong> <code>Authorization</code> carries signatures bound to the agreement hash. The ledger adapter checks them in application code; the vault adapter checks them in the contract. Same input shape, same semantics.</li>
+      <li lang="es"><strong>La autorización es dato, no identidad.</strong> <code>Authorization</code> lleva firmas ligadas al hash del acuerdo. El adaptador de libro las comprueba en código; el adaptador de vault, en el contrato. Misma forma de entrada, misma semántica.</li>
+      <li lang="en"><strong>The receipt is uniform.</strong> <code>SettlementReceipt</code> has the same fields regardless of backend, with an optional <code>onchain</code> block (tx hash, chain id, block number) that is <code>null</code> on the ledger. Callers never branch on backend type to read a receipt.</li>
+      <li lang="es"><strong>El recibo es uniforme.</strong> <code>SettlementReceipt</code> tiene los mismos campos sin importar el backend, con un bloque opcional <code>onchain</code> (hash de tx, chain id, número de bloque) que es <code>null</code> en el libro. Quien llama nunca ramifica por tipo de backend para leer un recibo.</li>
+    </ul>
+
+    <h2 lang="en">The two adapters that ship</h2>
+    <h2 lang="es">Los dos adaptadores incluidos</h2>
+    <div class="two-col">
+      <div class="card">
+        <h3><code>ledger</code> <span lang="en">(default)</span><span lang="es">(por defecto)</span></h3>
+        <p lang="en">The internal double-entry ledger in integer cents. It requires <strong>no wallet, no chain, and no crypto dependencies</strong>: the full test suite passes with zero blockchain packages installed, and a CI check fails the build if any core file imports a chain or RPC library.</p>
+        <p lang="es">El libro contable interno de partida doble en centavos enteros. No requiere <strong>ni billetera, ni cadena, ni dependencias de cripto</strong>: la suite de pruebas completa pasa sin ningún paquete de blockchain instalado, y una verificación de CI rompe el build si algún archivo del core importa una librería de cadena o RPC.</p>
+      </div>
+      <div class="card card-accent">
+        <h3><code>base-escrow-vault</code></h3>
+        <p lang="en">The reference on-chain implementation - a USDC <code>EscrowVault</code> on Base - shipped as a separate package that registers itself with the core. The core does not import it and does not depend on it; uninstalling the package leaves the ledger backend working unchanged.</p>
+        <p lang="es">La implementación on-chain de referencia -un <code>EscrowVault</code> de USDC en Base- distribuida como paquete aparte que se registra con el core. El core no lo importa ni depende de él; desinstalar el paquete deja el backend de libro funcionando sin cambios.</p>
+      </div>
+    </div>
+    <p lang="en">Selection is configuration, not code. The MCP tools are identical across backends - an agent cannot tell which one is running:</p>
+    <p lang="es">La selección es configuración, no código. Las herramientas MCP son idénticas entre backends: un agente no puede saber cuál está corriendo:</p>
+<pre><code>SETTLEMENT_BACKEND=ledger              <span class="c"># default - no wallet, no chain, no crypto</span>
+SETTLEMENT_BACKEND=base-escrow-vault   <span class="c"># reference onchain backend (USDC on Base)</span></code></pre>
+    <div class="note note-wax">
+      <p lang="en"><strong>The vault is unaudited testnet code.</strong> The reference <code>EscrowVault</code> targets Base Sepolia, carries a TVL cap and a pause, and is never for real funds. It is in security review and not yet deployed; the core protocol does not depend on it. See the <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/tree/main/packages/settlement-base" target="_blank" rel="noopener">settlement-base package</a> for its status, addresses, and how to run Pacta against it.</p>
+      <p lang="es"><strong>El vault es código de testnet sin auditar.</strong> El <code>EscrowVault</code> de referencia apunta a Base Sepolia, tiene un tope de TVL y una pausa, y nunca es para fondos reales. Está en revisión de seguridad y aún no desplegado; el protocolo core no depende de él. Consulta el <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/tree/main/packages/settlement-base" target="_blank" rel="noopener">paquete settlement-base</a> para su estado, direcciones y cómo correr Pacta contra él.</p>
+    </div>
+
+    <h2 lang="en">How to write a third backend</h2>
+    <h2 lang="es">Cómo escribir un tercer backend</h2>
+    <p lang="en">If you are porting Pacta to another settlement network, this is the whole job. Adding a backend requires implementing one interface and touching no core file:</p>
+    <p lang="es">Si estás portando Pacta a otra red de liquidación, este es todo el trabajo. Añadir un backend requiere implementar una interfaz y no tocar ningún archivo del core:</p>
+    <ol>
+      <li lang="en">Create a package that implements the eight <code>SettlementBackend</code> methods above. Keep amounts as integer minor units and make each operation atomic.</li>
+      <li lang="es">Crea un paquete que implemente los ocho métodos de <code>SettlementBackend</code> de arriba. Mantén los montos como unidades menores enteras y haz atómica cada operación.</li>
+      <li lang="en">Verify <code>Authorization</code> signatures against the agreement hash - in your contract if the funds are on-chain, or in code if they are not. Do not invent a new signature scheme; the flow already produced signatures bound to the agreement hash at agreement time.</li>
+      <li lang="es">Verifica las firmas de <code>Authorization</code> contra el hash del acuerdo: en tu contrato si los fondos están on-chain, o en código si no. No inventes un esquema de firma nuevo; el flujo ya produjo firmas ligadas al hash del acuerdo al momento de acordar.</li>
+      <li lang="en">Return the uniform <code>SettlementReceipt</code>. Populate the optional <code>onchain</code> block (tx hash, chain id, block number) if your backend settles on a chain; leave it <code>null</code> otherwise.</li>
+      <li lang="es">Devuelve el <code>SettlementReceipt</code> uniforme. Rellena el bloque opcional <code>onchain</code> (hash de tx, chain id, número de bloque) si tu backend liquida en una cadena; déjalo en <code>null</code> si no.</li>
+      <li lang="en">Register a factory via <code>registerSettlementBackend(id, factory)</code> before startup and select it with <code>SETTLEMENT_BACKEND=your-id</code>. No core edit is required, and the reference vault package is a worked example.</li>
+      <li lang="es">Registra una fábrica con <code>registerSettlementBackend(id, factory)</code> antes del arranque y selecciónala con <code>SETTLEMENT_BACKEND=tu-id</code>. No hace falta editar el core, y el paquete del vault de referencia es un ejemplo resuelto.</li>
+    </ol>
+    <p lang="en">Because the core calls only the interface, the same three example verticals (LandBridge, MedVoyage, Boa Vista) and the same 14 MCP tools work against any conforming backend without a line of change. That property is the point: a new chain adapter is cheap precisely because the neutrality is enforced, not merely promised.</p>
+    <p lang="es">Como el core solo llama a la interfaz, las mismas tres verticales de ejemplo (LandBridge, MedVoyage, Boa Vista) y las mismas 14 herramientas MCP funcionan contra cualquier backend conforme sin una línea de cambio. Esa propiedad es el punto: un nuevo adaptador de cadena es barato precisamente porque la neutralidad se hace cumplir, no solo se promete.</p>
+
+    <div class="note">
+      <p lang="en">Interface source: <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/src/settlement.js" target="_blank" rel="noopener">src/settlement.js</a>. Reference vault: <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/tree/main/packages/settlement-base" target="_blank" rel="noopener">packages/settlement-base</a>. Anchoring, the other half of Pacta's Base story, is covered in <a href="/docs/anchoring.html">Anchoring on Base</a>.</p>
+      <p lang="es">Código de la interfaz: <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/src/settlement.js" target="_blank" rel="noopener">src/settlement.js</a>. Vault de referencia: <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/tree/main/packages/settlement-base" target="_blank" rel="noopener">packages/settlement-base</a>. El anclaje, la otra mitad de la historia de Pacta en Base, está en <a href="/docs/anchoring.html">Anclaje en Base</a>.</p>
+    </div>
+  </main>
+</div>
+
+<footer class="footer">
+  <div class="wrap footer-cols">
+    <div>
+      <a class="brand" href="/index.html" aria-label="Pacta Protocol">
+        <svg viewBox="0 0 100 106" fill="none" stroke="currentColor" stroke-width="8.5" stroke-linecap="butt" stroke-linejoin="round" aria-hidden="true">
+          <path d="M31.5 21 V12 Q31.5 6 37.5 6 H86.5 Q92.5 6 92.5 12 V51 Q92.5 57 86.5 57 H77"/>
+          <path d="M58 57 H37.5 Q31.5 57 31.5 51 V33"/>
+          <path d="M11.5 27 H60.5 Q66.5 27 66.5 33 V72 Q66.5 78 60.5 78 H11.5 Q5.5 78 5.5 72 V33 Q5.5 27 11.5 27 Z"/>
+          <path d="M5.5 76 V102"/>
+        </svg>
+        <span class="wordmark">Pacta<br>Protocol</span>
+      </a>
+      <p class="tag" lang="en">Agreements that enforce themselves.</p>
+      <p class="tag" lang="es">Pactos que se cumplen por diseño.</p>
+    </div>
+    <div>
+      <h4 lang="en">Product</h4><h4 lang="es">Producto</h4>
+      <a href="https://app.pactaprotocol.org/" target="_blank" rel="noopener"><span lang="en">Try Pacta</span><span lang="es">Prueba Pacta</span></a>
+      <a href="/index.html#how"><span lang="en">How it works</span><span lang="es">Cómo funciona</span></a>
+      <a href="/index.html#registry"><span lang="en">Service registry</span><span lang="es">Registro de servicios</span></a>
+      <a href="/docs/cases.html"><span lang="en">Case studies</span><span lang="es">Casos</span></a>
+    </div>
+    <div>
+      <h4 lang="en">Build</h4><h4 lang="es">Construir</h4>
+      <a href="/docs/index.html"><span lang="en">Getting started</span><span lang="es">Primeros pasos</span></a>
+      <a href="/docs/mcp.html"><span lang="en">MCP integration</span><span lang="es">Integración MCP</span></a>
+      <a href="/docs/anchoring.html"><span lang="en">Anchoring on Base</span><span lang="es">Anclaje en Base</span></a>
+      <a href="/docs/settlement.html"><span lang="en">Settlement backends</span><span lang="es">Backends de liquidación</span></a>
+      <a href="/docs/faq.html">FAQ</a>
+      <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/ROADMAP.md" target="_blank" rel="noopener">Roadmap</a>
+    </div>
+    <div>
+      <h4 lang="en">Project</h4><h4 lang="es">Proyecto</h4>
+      <a href="mailto:hello@pactaprotocol.org"><span lang="en">Contact</span><span lang="es">Contacto</span></a>
+      <a href="/verify.html"><span lang="en">Verify a receipt</span><span lang="es">Verificar un recibo</span></a>
+      <a href="https://github.com/Pacta-Protocol" target="_blank" rel="noopener">GitHub</a>
+      <a lang="en" href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/docs/LITEPAPER.md" target="_blank" rel="noopener">Litepaper</a>
+      <a lang="es" href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/docs/LITEPAPER.es.md" target="_blank" rel="noopener">Litepaper</a>
+    </div>
+  </div>
+  <div class="wrap footer-base">
+    <span lang="en">© 2026 Pacta Protocol · Open source under the MIT License</span>
+    <span lang="es">© 2026 Pacta Protocol · Código abierto bajo licencia MIT</span>
+  </div>
+</footer>
+
+<script src="/assets/config.js"></script>
+<script src="/assets/site.js"></script>
+</body>
+</html>

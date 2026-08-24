@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verify a receipt - Pacta Protocol</title>
+  <meta name="description" content="Paste a Pacta receipt or an engagement ID and get pass or fail, checked against Base through a public RPC - entirely in your browser. No Pacta account, no Pacta API in the verdict.">
+  <link rel="canonical" href="https://pactaprotocol.org/verify.html">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/site.css?v=20260811">
+  <style>
+    .verify-wrap { max-width: 860px; margin: 0 auto; padding: 34px 20px 80px; }
+    .verify-in { width: 100%; min-height: 200px; font-family: var(--mono); font-size: 12.5px; line-height: 1.5;
+      padding: 14px; border-radius: 12px; border: 1px solid var(--hair, rgba(128,128,128,.28));
+      background: var(--panel, rgba(128,128,128,.05)); color: var(--ink); resize: vertical; }
+    .verify-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 14px 0; }
+    .id-in { font-family: var(--mono); font-size: 13px; padding: 10px 12px; border-radius: 10px;
+      border: 1px solid var(--hair, rgba(128,128,128,.28)); background: var(--panel, rgba(128,128,128,.05)); color: var(--ink); width: 160px; }
+    .check { padding: 9px 12px; border-left: 4px solid #8a8a8a; border-radius: 0 8px 8px 0; margin: 7px 0;
+      font-family: var(--mono); font-size: 12.5px; white-space: pre-wrap; word-break: break-word; background: rgba(128,128,128,.05); }
+    .check b { font-family: inherit; }
+    .PASS { border-left-color: #2e9e5b; } .FAIL { border-left-color: #cc3344; } .SKIP { border-left-color: #b9a23c; }
+    .verdict { font-weight: 800; font-size: 20px; margin: 18px 0 6px; }
+    .verdict.pass { color: #2e9e5b; } .verdict.fail { color: #cc3344; } .verdict.partial { color: #b9a23c; }
+    .rseq { font-family: var(--mono); font-weight: 700; font-size: 13px; margin: 18px 0 4px; color: var(--ink); }
+    .txlink { display: inline-block; margin-top: 6px; font-family: var(--mono); font-size: 12.5px; }
+  </style>
+</head>
+<body data-lang="en">
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/index.html" aria-label="Pacta Protocol">
+      <svg viewBox="0 0 100 106" fill="none" stroke="currentColor" stroke-width="8.5" stroke-linecap="butt" stroke-linejoin="round" aria-hidden="true">
+        <path d="M31.5 21 V12 Q31.5 6 37.5 6 H86.5 Q92.5 6 92.5 12 V51 Q92.5 57 86.5 57 H77"/>
+        <path d="M58 57 H37.5 Q31.5 57 31.5 51 V33"/>
+        <path d="M11.5 27 H60.5 Q66.5 27 66.5 33 V72 Q66.5 78 60.5 78 H11.5 Q5.5 78 5.5 72 V33 Q5.5 27 11.5 27 Z"/>
+        <path d="M5.5 76 V102"/>
+      </svg>
+      <span class="brand-word">Pacta<span class="sub">&nbsp;Protocol</span></span>
+    </a>
+    <nav class="nav-links">
+      <a href="/index.html#how"><span lang="en">How it works</span><span lang="es">Cómo funciona</span></a>
+      <a href="/docs/anchoring.html"><span lang="en">Anchoring</span><span lang="es">Anclaje</span></a>
+      <a href="/docs/index.html">Docs</a>
+      <a href="/docs/faq.html">FAQ</a>
+    </nav>
+    <div class="nav-right">
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button type="button" data-set-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-set-lang="es" aria-pressed="false">ES</button>
+      </div>
+      <a class="btn btn-primary" href="https://app.pactaprotocol.org/" target="_blank" rel="noopener"><span lang="en">Try Pacta</span><span lang="es">Prueba Pacta</span></a>
+    </div>
+  </div>
+</header>
+
+<main class="verify-wrap">
+  <p class="eyebrow"><span lang="en">Independent verifier</span><span lang="es">Verificador independiente</span></p>
+  <h1 lang="en">Verify a Pacta receipt against Base</h1>
+  <h1 lang="es">Verifica un recibo de Pacta contra Base</h1>
+  <p class="lede" lang="en">Paste a receipt (or the bundle from <code>GET /api/engagements/:id/proof</code>) and get pass or fail. The hash chain, the agreement hash, and the Merkle path are recomputed <strong>entirely in your browser</strong>; the anchored root is then checked against Base over a public RPC. Nothing you paste is sent to a Pacta server, and no Pacta API affects the verdict.</p>
+  <p class="lede" lang="es">Pega un recibo (o el paquete de <code>GET /api/engagements/:id/proof</code>) y obtén aprobado o fallido. La cadena de hashes, el hash del acuerdo y la ruta Merkle se recomputan <strong>enteramente en tu navegador</strong>; luego la raíz anclada se comprueba contra Base por un RPC público. Nada de lo que pegas se envía a un servidor de Pacta, y ninguna API de Pacta afecta el veredicto.</p>
+
+  <textarea class="verify-in" id="input" placeholder='{ "entry": { ... }, "merkle_proof": [...], "anchor": {...}, "pacta_sig": "0x…" }  —  or the full { "receipts": [...] } bundle'></textarea>
+  <div class="verify-row">
+    <button class="btn btn-primary" id="run"><span lang="en">Verify receipt</span><span lang="es">Verificar recibo</span></button>
+    <span style="opacity:.6">·</span>
+    <span lang="en" style="font-size:13px;color:var(--ink-dim)">or load by engagement ID:</span>
+    <span lang="es" style="font-size:13px;color:var(--ink-dim)">o cargar por ID de contrato:</span>
+    <input class="id-in" id="engid" inputmode="numeric" placeholder="e.g. 1">
+    <button class="btn btn-ghost" id="load"><span lang="en">Load &amp; verify</span><span lang="es">Cargar y verificar</span></button>
+  </div>
+  <p style="font-size:12.5px;color:var(--ink-dim);margin-top:-4px" lang="en">Loading by ID fetches the receipt bundle from the marketplace API purely as input - the verdict still comes only from client-side recomputation and the on-chain root on Base.</p>
+  <p style="font-size:12.5px;color:var(--ink-dim);margin-top:-4px" lang="es">Cargar por ID obtiene el paquete de recibos de la API del marketplace solo como entrada: el veredicto sigue viniendo únicamente de la recomputación en el cliente y de la raíz on-chain en Base.</p>
+
+  <div id="out"></div>
+
+  <div class="note" style="margin-top:26px">
+    <p lang="en">Signature checks (EIP-712 over secp256k1) and the fullest on-chain audit run in the dependency-free command-line verifier: <code>pacta-verify receipt.json --rpc &lt;url&gt;</code> (see <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/tree/main/packages/verifier" target="_blank" rel="noopener">packages/verifier</a>). Detecting tampered history does not require signatures: any alteration already breaks the hash checks on this page. Read how anchoring works in <a href="/docs/anchoring.html">Anchoring on Base</a>.</p>
+    <p lang="es">Las comprobaciones de firma (EIP-712 sobre secp256k1) y la auditoría on-chain más completa corren en el verificador de línea de comandos sin dependencias: <code>pacta-verify receipt.json --rpc &lt;url&gt;</code> (ver <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/tree/main/packages/verifier" target="_blank" rel="noopener">packages/verifier</a>). Detectar un historial alterado no requiere firmas: cualquier alteración ya rompe las comprobaciones de hash de esta página. Lee cómo funciona el anclaje en <a href="/docs/anchoring.html">Anclaje en Base</a>.</p>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-cols">
+    <div>
+      <a class="brand" href="/index.html" aria-label="Pacta Protocol">
+        <svg viewBox="0 0 100 106" fill="none" stroke="currentColor" stroke-width="8.5" stroke-linecap="butt" stroke-linejoin="round" aria-hidden="true">
+          <path d="M31.5 21 V12 Q31.5 6 37.5 6 H86.5 Q92.5 6 92.5 12 V51 Q92.5 57 86.5 57 H77"/>
+          <path d="M58 57 H37.5 Q31.5 57 31.5 51 V33"/>
+          <path d="M11.5 27 H60.5 Q66.5 27 66.5 33 V72 Q66.5 78 60.5 78 H11.5 Q5.5 78 5.5 72 V33 Q5.5 27 11.5 27 Z"/>
+          <path d="M5.5 76 V102"/>
+        </svg>
+        <span class="wordmark">Pacta<br>Protocol</span>
+      </a>
+      <p class="tag" lang="en">Agreements that enforce themselves.</p>
+      <p class="tag" lang="es">Pactos que se cumplen por diseño.</p>
+    </div>
+    <div>
+      <h4 lang="en">Build</h4><h4 lang="es">Construir</h4>
+      <a href="/docs/index.html"><span lang="en">Getting started</span><span lang="es">Primeros pasos</span></a>
+      <a href="/docs/mcp.html"><span lang="en">MCP integration</span><span lang="es">Integración MCP</span></a>
+      <a href="/docs/anchoring.html"><span lang="en">Anchoring on Base</span><span lang="es">Anclaje en Base</span></a>
+      <a href="/docs/settlement.html"><span lang="en">Settlement backends</span><span lang="es">Backends de liquidación</span></a>
+    </div>
+    <div>
+      <h4 lang="en">Project</h4><h4 lang="es">Proyecto</h4>
+      <a href="/docs/faq.html">FAQ</a>
+      <a href="https://github.com/Pacta-Protocol" target="_blank" rel="noopener">GitHub</a>
+      <a lang="en" href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/docs/LITEPAPER.md" target="_blank" rel="noopener">Litepaper</a>
+      <a lang="es" href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/docs/LITEPAPER.es.md" target="_blank" rel="noopener">Litepaper</a>
+    </div>
+  </div>
+  <div class="wrap footer-base">
+    <span lang="en">© 2026 Pacta Protocol · Open source under the MIT License</span>
+    <span lang="es">© 2026 Pacta Protocol · Código abierto bajo licencia MIT</span>
+  </div>
+</footer>
+
+<script src="/assets/config.js"></script>
+<script src="/assets/site.js"></script>
+<script>
+'use strict';
+// Independent reimplementation of the Phase 0 formulas (canonical docs live in
+// packages/verifier). Deliberately imports nothing. All hash math runs here in
+// the browser; the only network call that touches the verdict is a read-only
+// eth_getTransactionReceipt to a public Base RPC.
+(function () {
+  var L = function (en, es) { return { en: en, es: es }; };
+  var lang = function () { return document.body.getAttribute('data-lang') === 'es' ? 'es' : 'en'; };
+
+  var enc = new TextEncoder();
+  var strip0x = function (h) { return String(h).indexOf('0x') === 0 ? String(h).slice(2) : String(h); };
+  var hexToBytes = function (hex) { return Uint8Array.from(strip0x(hex).match(/.{2}/g).map(function (b) { return parseInt(b, 16); })); };
+  var bytesToHex = function (b) { return '0x' + Array.from(new Uint8Array(b)).map(function (x) { return x.toString(16).padStart(2, '0'); }).join(''); };
+  async function sha256() {
+    var parts = Array.prototype.slice.call(arguments);
+    var total = parts.reduce(function (n, p) { return n + p.length; }, 0);
+    var buf = new Uint8Array(total), off = 0;
+    parts.forEach(function (p) { buf.set(p, off); off += p.length; });
+    return bytesToHex(await crypto.subtle.digest('SHA-256', buf));
+  }
+  // RFC 8785 (JCS) for the protocol's value space.
+  function canonicalize(v) {
+    if (v === null || typeof v === 'boolean' || typeof v === 'string') return JSON.stringify(v);
+    if (typeof v === 'number') { if (!isFinite(v)) throw new Error('non-finite'); return JSON.stringify(v); }
+    if (Array.isArray(v)) return '[' + v.map(canonicalize).join(',') + ']';
+    if (typeof v === 'object') {
+      var keys = Object.keys(v).filter(function (k) { return v[k] !== undefined; }).sort();
+      return '{' + keys.map(function (k) { return JSON.stringify(k) + ':' + canonicalize(v[k]); }).join(',') + '}';
+    }
+    throw new Error('cannot canonicalize ' + typeof v);
+  }
+  var entryHashOf = function (prev, e) {
+    return sha256(enc.encode(prev), enc.encode(canonicalize(
+      { seq: e.seq, engagement: e.engagement, type: e.type, payload: e.payload, at: e.at })));
+  };
+
+  var ANCHOR = window.PACTA_ANCHOR || {};
+  var addrConfigured = ANCHOR.address && ANCHOR.address.indexOf('{{') !== 0 && /^0x[0-9a-fA-F]{40}$/.test(ANCHOR.address);
+  var chainMeta = function (chainId) {
+    if (chainId === 84532) return { rpc: 'https://sepolia.base.org', explorer: 'https://sepolia.basescan.org', name: 'Base Sepolia' };
+    if (chainId === 8453) return { rpc: 'https://mainnet.base.org', explorer: 'https://basescan.org', name: 'Base mainnet' };
+    return { rpc: ANCHOR.rpcUrl, explorer: ANCHOR.explorer, name: 'Base' };
+  };
+
+  // Read the RootAnchored log for the receipt's anchor tx from a public RPC and
+  // confirm the on-chain root equals the root our Merkle path reached. Returns
+  // { status, detail, tx, explorer } — never throws; RPC trouble degrades to SKIP.
+  async function checkOnChain(receipt, computedRoot) {
+    var anchor = receipt.anchor;
+    if (!anchor) return { status: 'SKIP', detail: L('receipt has no anchor yet', 'el recibo aún no tiene anclaje') };
+    if (Number(anchor.chain_id) === 0) return { status: 'SKIP', detail: L('chain_id 0 is a simulated local anchor - nothing on a public chain to check', 'chain_id 0 es un anclaje local simulado - no hay nada que comprobar en una cadena pública') };
+    var meta = chainMeta(Number(anchor.chain_id));
+    var rpc = meta.rpc || ANCHOR.rpcUrl;
+    if (!anchor.tx_hash || !/^0x[0-9a-fA-F]{64}$/.test(anchor.tx_hash)) {
+      return { status: 'SKIP', detail: L('anchor carries no usable tx hash', 'el anclaje no trae un hash de tx utilizable') };
+    }
+    if (!addrConfigured) {
+      return { status: 'SKIP', detail: L('on-chain confirmation activates once the AnchorRegistry is deployed - the hash checks above are complete and ran in your browser', 'la confirmación on-chain se activa cuando el AnchorRegistry esté desplegado - las comprobaciones de hash de arriba están completas y corrieron en tu navegador') };
+    }
+    var body = { jsonrpc: '2.0', id: 1, method: 'eth_getTransactionReceipt', params: [anchor.tx_hash] };
+    var res;
+    try {
+      var r = await fetch(rpc, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+      res = await r.json();
+    } catch (e) {
+      return { status: 'SKIP', detail: L('could not reach the public RPC (' + rpc + ') - try again, or use the CLI verifier', 'no se pudo contactar el RPC público (' + rpc + ') - reintenta o usa el verificador CLI') };
+    }
+    var rc = res && res.result;
+    if (!rc) return { status: 'FAIL', detail: L('no transaction with that hash exists on ' + meta.name + ' - the anchor tx is fabricated', 'no existe transacción con ese hash en ' + meta.name + ' - la tx de anclaje es inventada') };
+    var want = String(computedRoot).toLowerCase();
+    var registry = ANCHOR.address.toLowerCase();
+    var logs = rc.logs || [];
+    var match = null;
+    for (var i = 0; i < logs.length; i++) {
+      var lg = logs[i];
+      if ((lg.address || '').toLowerCase() !== registry) continue;      // must be THE registry
+      if (!lg.topics || lg.topics.length < 3) continue;                  // RootAnchored: sig, sequence, root
+      if (String(lg.topics[2]).toLowerCase() === want) { match = lg; break; }
+    }
+    var tx = anchor.tx_hash;
+    var explorer = meta.explorer;
+    if (!match) {
+      // Was there a RootAnchored from the registry at all, with a different root?
+      var fromRegistry = logs.some(function (lg) { return (lg.address || '').toLowerCase() === registry; });
+      return {
+        status: 'FAIL', tx: tx, explorer: explorer,
+        detail: fromRegistry
+          ? L('the AnchorRegistry emitted a different root in this tx - the receipt does not match Base', 'el AnchorRegistry emitió una raíz distinta en esta tx - el recibo no coincide con Base')
+          : L('this tx carries no AnchorRegistry root at ' + ANCHOR.address, 'esta tx no lleva ninguna raíz del AnchorRegistry en ' + ANCHOR.address),
+      };
+    }
+    return {
+      status: 'PASS', tx: tx, explorer: explorer,
+      detail: L('the anchored root is recorded on ' + meta.name + ' by the AnchorRegistry - independently confirmed',
+                'la raíz anclada está registrada en ' + meta.name + ' por el AnchorRegistry - confirmada de forma independiente'),
+    };
+  }
+
+  async function verifyOne(receipt) {
+    var checks = [];
+    var push = function (name, status, detail, extra) { checks.push(Object.assign({ name: name, status: status, detail: detail }, extra || {})); };
+    var entry = receipt.entry || {};
+    try {
+      var recomputed = await entryHashOf(entry.prev_hash, entry);
+      push('entry_hash', recomputed === entry.entry_hash ? 'PASS' : 'FAIL',
+        recomputed === entry.entry_hash ? L('entry hash recomputes identically', 'el hash de la entrada se recomputa idéntico')
+          : L('recomputed ' + recomputed + ' != stored ' + entry.entry_hash + ' - the entry was altered', 'recomputado ' + recomputed + ' != almacenado ' + entry.entry_hash + ' - la entrada fue alterada'));
+    } catch (err) { push('entry_hash', 'FAIL', L('cannot recompute: ' + err.message, 'no se puede recomputar: ' + err.message)); }
+
+    if (entry.type === 'AgreementLocked' && entry.payload && entry.payload.agreement) {
+      var rc2 = await sha256(enc.encode(canonicalize(entry.payload.agreement)));
+      var claimed = entry.payload.agreement_hash;
+      push('agreement_hash', rc2 === claimed ? 'PASS' : 'FAIL',
+        rc2 === claimed ? L('agreement terms hash to the claimed identity', 'los términos del acuerdo hashean a la identidad declarada')
+          : L('terms hash to ' + rc2 + ', not ' + claimed + ' - terms were altered', 'los términos hashean a ' + rc2 + ', no a ' + claimed + ' - fueron alterados'));
+    }
+
+    var computedRoot = null;
+    if (receipt.merkle_proof && receipt.anchor) {
+      var LEAF = Uint8Array.of(0x00), NODE = Uint8Array.of(0x01);
+      var acc = await sha256(LEAF, hexToBytes(entry.entry_hash));
+      for (var s = 0; s < receipt.merkle_proof.length; s++) {
+        var step = receipt.merkle_proof[s];
+        acc = step.pos === 'right'
+          ? await sha256(NODE, hexToBytes(acc), hexToBytes(step.hash))
+          : await sha256(NODE, hexToBytes(step.hash), hexToBytes(acc));
+      }
+      computedRoot = acc;
+      push('merkle_proof', acc === receipt.anchor.root ? 'PASS' : 'FAIL',
+        acc === receipt.anchor.root ? L('Merkle path reaches the anchored root', 'la ruta Merkle alcanza la raíz anclada')
+          : L('path reaches ' + acc + ' != anchor root ' + receipt.anchor.root, 'la ruta llega a ' + acc + ' != raíz de anclaje ' + receipt.anchor.root));
+      var oc = await checkOnChain(receipt, computedRoot);
+      push('anchor_on_chain', oc.status, oc.detail, { tx: oc.tx, explorer: oc.explorer });
+    } else {
+      push('merkle_proof', 'SKIP', L('not yet covered by an anchor', 'aún no cubierto por un anclaje'));
+    }
+    push('signatures', 'SKIP', L('EIP-712 checks run in the CLI verifier (pacta-verify)', 'las comprobaciones EIP-712 corren en el verificador CLI (pacta-verify)'));
+    return checks;
+  }
+
+  function txt(node, obj) { node.textContent = obj[lang()]; node.setAttribute('data-en', obj.en); node.setAttribute('data-es', obj.es); }
+
+  async function run(doc) {
+    var out = document.getElementById('out');
+    out.innerHTML = '';
+    var receipts = Array.isArray(doc.receipts) ? doc.receipts : [doc];
+    var anyFail = false, anyOnChainPass = false, allHashPass = true;
+    for (var i = 0; i < receipts.length; i++) {
+      var r = receipts[i];
+      var h = document.createElement('div');
+      h.className = 'rseq';
+      h.textContent = 'receipt seq=' + (r.entry && r.entry.seq) + ' (' + (r.entry && r.entry.type) + ')';
+      out.appendChild(h);
+      var results = await verifyOne(r);
+      results.forEach(function (c) {
+        if (c.status === 'FAIL') { anyFail = true; if (c.name !== 'anchor_on_chain') allHashPass = false; else allHashPass = false; }
+        if (c.name === 'anchor_on_chain' && c.status === 'PASS') anyOnChainPass = true;
+        var div = document.createElement('div');
+        div.className = 'check ' + c.status;
+        var line = document.createElement('div');
+        txt(line, { en: c.status + '  ' + c.name + ' - ' + c.detail.en, es: c.status + '  ' + c.name + ' - ' + c.detail.es });
+        div.appendChild(line);
+        if (c.tx && c.explorer) {
+          var a = document.createElement('a');
+          a.className = 'txlink';
+          a.href = c.explorer + '/tx/' + c.tx;
+          a.target = '_blank'; a.rel = 'noopener';
+          a.textContent = 'view tx on Basescan: ' + c.tx.slice(0, 14) + '…';
+          div.appendChild(a);
+        }
+        out.appendChild(div);
+      });
+    }
+    var v = document.createElement('p');
+    var cls = anyFail ? 'fail' : (anyOnChainPass ? 'pass' : 'partial');
+    v.className = 'verdict ' + cls;
+    var msg = anyFail
+      ? L('FAIL - this receipt proves tampering or is malformed.', 'FALLIDO - este recibo demuestra alteración o está malformado.')
+      : anyOnChainPass
+        ? L('PASS - history intact and confirmed against Base.', 'APROBADO - historial íntegro y confirmado contra Base.')
+        : L('PASS (hash checks) - history intact; on-chain confirmation pending anchor/deployment.', 'APROBADO (comprobaciones de hash) - historial íntegro; confirmación on-chain pendiente de anclaje/despliegue.');
+    txt(v, msg);
+    out.insertBefore(v, out.firstChild);
+  }
+
+  function parseAndRun() {
+    var out = document.getElementById('out');
+    var doc;
+    try { doc = JSON.parse(document.getElementById('input').value); }
+    catch (e) { out.innerHTML = ''; var p = document.createElement('p'); p.className = 'check FAIL'; txt(p, L('That is not valid JSON.', 'Eso no es JSON válido.')); out.appendChild(p); return; }
+    run(doc);
+  }
+
+  document.getElementById('run').addEventListener('click', parseAndRun);
+
+  document.getElementById('load').addEventListener('click', async function () {
+    var id = String(document.getElementById('engid').value || '').replace(/[^0-9]/g, '');
+    var out = document.getElementById('out');
+    out.innerHTML = '';
+    if (!id) { var p = document.createElement('p'); p.className = 'check SKIP'; txt(p, L('Enter an engagement ID first.', 'Escribe primero un ID de contrato.')); out.appendChild(p); return; }
+    var apiBase = (window.PACTA_APP_URL || 'http://localhost:3220').replace(/\/$/, '');
+    var note = document.createElement('p'); note.className = 'check SKIP';
+    txt(note, L('loading receipt bundle for engagement ' + id + ' from ' + apiBase + ' …', 'cargando el paquete de recibos del contrato ' + id + ' desde ' + apiBase + ' …'));
+    out.appendChild(note);
+    try {
+      var r = await fetch(apiBase + '/api/engagements/' + id + '/proof');
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      var doc = await r.json();
+      document.getElementById('input').value = JSON.stringify(doc, null, 2);
+      run(doc);
+    } catch (e) {
+      out.innerHTML = '';
+      var p2 = document.createElement('p'); p2.className = 'check FAIL';
+      txt(p2, L('Could not load engagement ' + id + ' (' + e.message + '). Paste the receipt JSON instead.', 'No se pudo cargar el contrato ' + id + ' (' + e.message + '). Pega el JSON del recibo en su lugar.'));
+      out.appendChild(p2);
+    }
+  });
+
+  // Re-render existing check text when the language toggles.
+  document.addEventListener('click', function (ev) {
+    if (!ev.target.closest('[data-set-lang]')) return;
+    var lg = lang();
+    document.querySelectorAll('#out [data-en]').forEach(function (n) { n.textContent = n.getAttribute('data-' + lg); });
+  });
+})();
+</script>
+</body>
+</html>

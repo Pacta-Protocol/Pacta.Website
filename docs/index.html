@@ -58,10 +58,13 @@
     <nav>
       <a href="/docs/index.html" aria-current="page"><span lang="en">Getting started</span><span lang="es">Primeros pasos</span></a>
       <a href="/docs/mcp.html"><span lang="en">MCP integration</span><span lang="es">Integración MCP</span></a>
+      <a href="/docs/anchoring.html"><span lang="en">Anchoring on Base</span><span lang="es">Anclaje en Base</span></a>
+      <a href="/docs/settlement.html"><span lang="en">Settlement backends</span><span lang="es">Backends de liquidación</span></a>
       <a href="/docs/vetting.html"><span lang="en">Vetting game theory</span><span lang="es">Teoría de juegos</span></a>
       <a href="/docs/impact.html"><span lang="en">Impact</span><span lang="es">Impacto</span></a>
       <a href="/docs/cases.html"><span lang="en">Case studies</span><span lang="es">Casos</span></a>
       <a href="/docs/faq.html">FAQ</a>
+      <a href="/verify.html"><span lang="en">Verify a receipt</span><span lang="es">Verificar un recibo</span></a>
     </nav>
   </aside>
 
@@ -186,8 +189,8 @@ npm run start:pacta   <span class="c"># Pacta with full trust mechanics</span>
       </div>
       <div class="card">
         <h3><span lang="en">Tamper-evident history</span><span lang="es">Historial a prueba de alteraciones</span></h3>
-        <p lang="en">Every agreement is canonically hashed (RFC 8785) and signed by both parties (EIP-712); every lifecycle event is written to a hash-chained, append-only log whose Merkle roots are anchored to a public chain. Both parties keep signed receipts an <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/tree/main/packages/verifier">open-source verifier</a> can check without Pacta, so rewriting an agreement, a rating or a ruling is mathematically provable. Funds stay off-chain on the internal ledger by design (see <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/docs/adr/001-cryptographic-immutability.md">ADR-001</a>).</p>
-        <p lang="es">Cada acuerdo se hashea de forma canónica (RFC 8785) y lo firman ambas partes (EIP-712); cada evento del ciclo de vida se escribe en un registro append-only encadenado por hash cuyas raíces Merkle se anclan a una cadena pública. Ambas partes guardan recibos firmados que un <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/tree/main/packages/verifier">verificador de código abierto</a> puede comprobar sin Pacta, así que reescribir un acuerdo, una calificación o un fallo es demostrable matemáticamente. Los fondos permanecen off-chain en el libro interno por diseño (ver <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/docs/adr/001-cryptographic-immutability.md">ADR-001</a>).</p>
+        <p lang="en">Every agreement is canonically hashed (RFC 8785) and signed by both parties (EIP-712); every lifecycle event is written to a hash-chained, append-only log whose Merkle roots Pacta anchors to Base every 12 hours (<a href="/docs/anchoring.html">Anchoring on Base</a>). Both parties keep signed receipts the <a href="/verify.html">open-source verifier</a> can check without Pacta, so rewriting an agreement, a rating or a ruling is mathematically provable. By default funds stay on the internal ledger; settlement sits behind an interface with a USDC vault on Base as the reference on-chain backend (<a href="/docs/settlement.html">Settlement backends</a>). See <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/docs/adr/001-cryptographic-immutability.md">ADR-001</a>.</p>
+        <p lang="es">Cada acuerdo se hashea de forma canónica (RFC 8785) y lo firman ambas partes (EIP-712); cada evento del ciclo de vida se escribe en un registro append-only encadenado por hash cuyas raíces Merkle Pacta ancla en Base cada 12 horas (<a href="/docs/anchoring.html">Anclaje en Base</a>). Ambas partes guardan recibos firmados que el <a href="/verify.html">verificador de código abierto</a> puede comprobar sin Pacta, así que reescribir un acuerdo, una calificación o un fallo es demostrable matemáticamente. Por defecto los fondos permanecen en el libro interno; la liquidación está detrás de una interfaz con un vault de USDC en Base como backend on-chain de referencia (<a href="/docs/settlement.html">Backends de liquidación</a>). Ver <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/docs/adr/001-cryptographic-immutability.md">ADR-001</a>.</p>
       </div>
     </div>
     <p lang="en">The stake is not just a deposit - it also sizes how much open work a provider is allowed to hold at once. A provider's exposure is capped relative to its stake and the volume it has already proven, so it can never hold more open value than it would hurt to lose.</p>
