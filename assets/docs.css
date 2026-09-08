@@ -1,0 +1,450 @@
+/* ==========================================================================
+   docs.css — Documentation layer for Pacta Protocol.
+   Builds on /assets/styles.css (design tokens, header, footer, buttons).
+   Only styles the documentation body: layout, prose, tables, code, cards.
+   ========================================================================== */
+
+/* --- Layout ------------------------------------------------------------- */
+.docs-layout {
+  display: grid;
+  grid-template-columns: 236px minmax(0, 1fr);
+  gap: 64px;
+  align-items: start;
+  padding-block: 56px 112px;
+}
+
+.docs-side {
+  position: sticky;
+  top: 113px;
+  align-self: start;
+  padding-right: 8px;
+  border-right: 1px solid var(--line);
+}
+
+.docs-side .kicker {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 18px;
+}
+
+.docs-side nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.docs-side nav a {
+  display: block;
+  padding: 8px 12px;
+  margin-left: -1px;
+  border-left: 2px solid transparent;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #a2adc0;
+  border-radius: 0 5px 5px 0;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.docs-side nav a:hover {
+  color: var(--text);
+  background: #ffffff08;
+}
+
+.docs-side nav a[aria-current] {
+  color: var(--cyan);
+  border-left-color: var(--cyan);
+  background: #6bdaef0f;
+}
+
+.docs-content {
+  min-width: 0;
+  max-width: 860px;
+}
+
+/* --- Breadcrumbs / eyebrow / headings ----------------------------------- */
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin: 0 0 28px;
+}
+
+.crumbs a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+.crumbs a:hover { color: var(--cyan); }
+.crumbs > span { color: #38465b; }
+
+.docs-content .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 18px;
+}
+
+.docs-content .eyebrow::before {
+  content: "";
+  width: 22px;
+  height: 1px;
+  background: var(--cyan);
+  flex-shrink: 0;
+}
+
+.docs-content h1 {
+  font-family: var(--heading);
+  font-weight: 550;
+  font-size: clamp(2.1rem, 4vw, 3rem);
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  margin: 0 0 24px;
+}
+
+.docs-content h2 {
+  font-family: var(--heading);
+  font-weight: 550;
+  font-size: clamp(1.5rem, 2.4vw, 1.95rem);
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+  margin: 64px 0 20px;
+  padding-top: 40px;
+  border-top: 1px solid var(--line);
+}
+
+.docs-content h1,
+.docs-content h2,
+.docs-content h3,
+.docs-content h4 { overflow-wrap: break-word; }
+
+.docs-content h3 {
+  font-family: var(--heading);
+  font-weight: 600;
+  font-size: 1.15rem;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  margin: 0 0 12px;
+}
+
+.docs-content h4 {
+  font-family: var(--heading);
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+  margin: 0 0 8px;
+}
+
+/* First heading after the lede shouldn't carry the top rule. */
+.docs-content > .lede + h2,
+.docs-content > .note + h2 { border-top: 0; padding-top: 0; margin-top: 48px; }
+
+/* --- Prose -------------------------------------------------------------- */
+.docs-content p {
+  color: #c2ccdb;
+  line-height: 1.7;
+  margin: 0 0 18px;
+}
+
+.docs-content .lede {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: var(--text);
+  margin: 0 0 32px;
+}
+
+.docs-content a:not(.button):not(.text-link) {
+  color: var(--cyan);
+  text-decoration: underline;
+  text-decoration-color: #6bdaef55;
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.2s;
+}
+.docs-content a:not(.button):not(.text-link):hover { text-decoration-color: var(--cyan); }
+
+.docs-content strong { color: var(--text); font-weight: 600; }
+
+.docs-content ul,
+.docs-content ol {
+  color: #c2ccdb;
+  line-height: 1.7;
+  margin: 0 0 18px;
+  padding-left: 22px;
+}
+.docs-content li { margin-bottom: 8px; }
+.docs-content li::marker { color: var(--cyan); }
+
+/* Accent for figures like percentages and dollar amounts. */
+.money {
+  font-family: var(--mono);
+  font-size: 0.92em;
+  color: var(--green);
+  white-space: nowrap;
+}
+
+/* --- Inline code and code blocks ---------------------------------------- */
+.docs-content code {
+  font-family: var(--mono);
+  font-size: 0.86em;
+  padding: 0.12em 0.42em;
+  border-radius: 4px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: #cfe9f2;
+}
+
+.docs-content pre {
+  margin: 0 0 24px;
+  padding: 20px 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow-x: auto;
+  line-height: 1.6;
+}
+
+.docs-content pre code {
+  font-size: 0.85rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #d5deec;
+  white-space: pre;
+}
+
+/* Syntax accents used inside <pre> blocks. */
+pre .c { color: #6e7d96; font-style: italic; }   /* comments */
+pre .g { color: var(--cyan); }                    /* arrows / glyphs */
+pre .money { color: var(--green); }
+
+/* --- Notes / callouts --------------------------------------------------- */
+.note {
+  position: relative;
+  margin: 0 0 24px;
+  padding: 18px 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--cyan);
+  border-radius: 6px;
+  color: #c8d2e1;
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+.note p { margin: 0; color: inherit; }
+.note p + p { margin-top: 12px; }
+
+/* Warmer variant used for caveats / "handle with care" notes. */
+.note-wax { border-left-color: var(--indigo); }
+
+/* --- Cards and grids ---------------------------------------------------- */
+.grid-2,
+.grid-3,
+.two-col {
+  display: grid;
+  gap: 20px;
+  margin: 0 0 24px;
+}
+.grid-2, .two-col { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+/* Grid/flex children must be allowed to shrink below their min-content,
+   otherwise a wide child (e.g. a <pre> code block) stretches the whole
+   track and overflows the page on narrow viewports. */
+.grid-2 > *, .grid-3 > *, .two-col > *, .anchor-flow > * { min-width: 0; }
+
+.card {
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.card > *:last-child { margin-bottom: 0; }
+.card h3 { color: var(--text); }
+.card p { font-size: 0.94rem; }
+
+/* Accent cards get a hairline cyan top edge. */
+.card-accent {
+  background: linear-gradient(180deg, #101a2b 0%, #0c1321 100%);
+  border-top: 1px solid #6bdaef44;
+}
+
+/* --- Steps -------------------------------------------------------------- */
+.steps {
+  display: grid;
+  gap: 16px;
+  margin: 0 0 24px;
+}
+.step {
+  padding: 20px 24px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--indigo);
+  border-radius: 6px;
+}
+.step h3 {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--cyan);
+}
+.step p { margin-bottom: 0; font-size: 0.94rem; }
+
+/* Numbered flow (e.g. anchoring pipeline) */
+.anchor-flow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0 0 24px;
+}
+.stepbox {
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.stepbox .n {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  color: var(--cyan);
+  margin-bottom: 12px;
+}
+.stepbox h4 { margin-bottom: 6px; }
+.stepbox p { font-size: 0.88rem; margin-bottom: 0; }
+
+/* --- Tables ------------------------------------------------------------- */
+.table-scroll {
+  overflow-x: auto;
+  margin: 0 0 24px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.docs-content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+.table-scroll table { border-radius: 10px; overflow: hidden; }
+
+.docs-content th,
+.docs-content td {
+  padding: 13px 18px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--line);
+}
+.docs-content thead th {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--surface-2);
+}
+.docs-content tbody tr:last-child td { border-bottom: 0; }
+.docs-content td { color: #c2ccdb; }
+.docs-content td code { white-space: nowrap; }
+
+/* Key/value table (e.g. anchoring reference) */
+.kv td:first-child {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--cyan);
+  white-space: nowrap;
+  width: 1%;
+}
+
+/* --- FAQ accordion ------------------------------------------------------ */
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 24px;
+  border-top: 1px solid var(--line);
+}
+.faq {
+  border-bottom: 1px solid var(--line);
+}
+.faq summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 4px;
+  font-family: var(--heading);
+  font-size: 1.05rem;
+  font-weight: 550;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  cursor: pointer;
+  list-style: none;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after {
+  content: "+";
+  font-family: var(--mono);
+  font-size: 1.25rem;
+  color: var(--cyan);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.faq[open] summary::after { transform: rotate(45deg); }
+.faq .a { padding: 0 4px 22px; }
+.faq .a p { margin-bottom: 12px; font-size: 0.95rem; }
+.faq .a > *:last-child { margin-bottom: 0; }
+
+/* --- MCP tool reference ------------------------------------------------- */
+.tool {
+  padding: 20px 22px;
+  margin: 0 0 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.tool > *:last-child { margin-bottom: 0; }
+.tool h3 {
+  font-family: var(--mono);
+  font-size: 0.98rem;
+  font-weight: 500;
+  color: var(--cyan);
+  letter-spacing: 0;
+}
+.tool code { background: none; border: 0; padding: 0; color: var(--cyan); }
+.params {
+  font-family: var(--mono);
+  font-size: 0.82rem !important;
+  color: var(--muted) !important;
+  line-height: 1.6;
+}
+
+/* --- Responsive --------------------------------------------------------- */
+@media (max-width: 1000px) {
+  .docs-layout {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding-block: 32px 80px;
+  }
+  .docs-side {
+    position: static;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    padding: 0 0 24px;
+    margin-bottom: 40px;
+  }
+  .docs-side nav {
+    flex-flow: row wrap;
+    gap: 4px 6px;
+  }
+  .docs-side nav a { border-left: 0; border-radius: 20px; padding: 7px 14px; }
+  .docs-side nav a[aria-current] { border-left: 0; background: #6bdaef1a; }
+}
+
+@media (max-width: 720px) {
+  .grid-2, .grid-3, .two-col, .anchor-flow { grid-template-columns: minmax(0, 1fr); }
+  .docs-content h2 { margin-top: 48px; padding-top: 32px; }
+}
