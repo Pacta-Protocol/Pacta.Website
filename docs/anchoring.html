@@ -6,11 +6,16 @@
   <title>Anchoring on Base - Pacta Protocol Docs</title>
   <meta name="description" content="Every 12 hours Pacta publishes one Merkle root of its agreement log to an AnchorRegistry contract on Base. This is what it proves - history integrity - and what it deliberately does not prove.">
   <link rel="canonical" href="https://pactaprotocol.org/docs/anchoring.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pactaprotocol.org/docs/anchoring.html">
+  <meta property="og:title" content="Anchoring on Base - Pacta Protocol Docs">
+  <meta property="og:description" content="Every 12 hours Pacta publishes one Merkle root of its agreement log to an AnchorRegistry contract on Base. This is what it proves - history integrity - and what it deliberately does not prove.">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/site.css?v=20260811">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#080d18">
+  <link rel="stylesheet" href="/assets/styles.css">
+  <link rel="stylesheet" href="/assets/docs.css">
+  <script src="/assets/app.js" defer></script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -42,36 +47,21 @@
     .kv code { word-break: break-all; }
   </style>
 </head>
-<body data-lang="en">
+<body id="top" data-page="docs">
+<a class="skip-link" href="#main"><span lang="en">Skip to content</span><span lang="es">Saltar al contenido</span></a>
 
-<header class="nav">
-  <div class="nav-inner">
-    <a class="brand" href="/index.html" aria-label="Pacta Protocol">
-      <svg viewBox="0 0 100 106" fill="none" stroke="currentColor" stroke-width="8.5" stroke-linecap="butt" stroke-linejoin="round" aria-hidden="true">
-        <path d="M31.5 21 V12 Q31.5 6 37.5 6 H86.5 Q92.5 6 92.5 12 V51 Q92.5 57 86.5 57 H77"/>
-        <path d="M58 57 H37.5 Q31.5 57 31.5 51 V33"/>
-        <path d="M11.5 27 H60.5 Q66.5 27 66.5 33 V72 Q66.5 78 60.5 78 H11.5 Q5.5 78 5.5 72 V33 Q5.5 27 11.5 27 Z"/>
-        <path d="M5.5 76 V102"/>
-      </svg>
-      <span class="brand-word">Pacta<span class="sub">&nbsp;Protocol</span></span>
-    </a>
-    <nav class="nav-links">
-      <a href="/index.html#how"><span lang="en">How it works</span><span lang="es">Cómo funciona</span></a>
-      <a href="/index.html#agents"><span lang="en">For agents (MCP)</span><span lang="es">Para agentes (MCP)</span></a>
-      <a href="/docs/index.html">Docs</a>
-      <a href="/docs/faq.html">FAQ</a>
-    </nav>
-    <div class="nav-right">
-      <div class="lang-toggle" role="group" aria-label="Language">
-        <button type="button" data-set-lang="en" aria-pressed="true">EN</button>
-        <button type="button" data-set-lang="es" aria-pressed="false">ES</button>
-      </div>
-      <a class="btn btn-primary" href="https://app.pactaprotocol.org/" target="_blank" rel="noopener"><span lang="en">Try Pacta</span><span lang="es">Prueba Pacta</span></a>
-    </div>
-  </div>
-</header>
+ <header class="site-header"><div class="container nav-wrap"><a class="brand" href="/" aria-label="Pacta Protocol, home"><svg class="brand-mark" viewBox="0 0 100 106" fill="none" stroke="currentColor" stroke-width="8.5" stroke-linecap="butt" stroke-linejoin="round" aria-hidden="true"><path d="M31.5 21 V12 Q31.5 6 37.5 6 H86.5 Q92.5 6 92.5 12 V51 Q92.5 57 86.5 57 H77"/><path d="M58 57 H37.5 Q31.5 57 31.5 51 V33"/><path d="M11.5 27 H60.5 Q66.5 27 66.5 33 V72 Q66.5 78 60.5 78 H11.5 Q5.5 78 5.5 72 V33 Q5.5 27 11.5 27 Z"/><path d="M5.5 76 V102"/></svg><span>pacta<span class="brand-sub">PROTOCOL</span></span></a>
+ <nav id="main-nav" aria-label="Main navigation">
+ <a href="/why/"><span lang="en">Why Pacta</span><span lang="es">Por qué Pacta</span></a>
+ <a href="/#how-it-works"><span lang="en">How it works</span><span lang="es">Cómo funciona</span></a>
+ <a href="/#agents"><span lang="en">For agents</span><span lang="es">Para agentes</span></a>
+ <a href="/#businesses"><span lang="en">For businesses</span><span lang="es">Para negocios</span></a>
+ <a href="/docs/index.html" aria-current="page">Docs</a>
+ </nav><div class="nav-actions"><div class="language-switch" aria-label="Language / Idioma"><button data-language="en" aria-pressed="true">EN</button><span>/</span><button data-language="es" aria-pressed="false">ES</button></div>
+ <a class="button button-small button-light" href="https://app.pactaprotocol.org/"><span lang="en">Try Pacta</span><span lang="es">Prueba Pacta</span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a>
+ <button class="menu-toggle" aria-controls="main-nav" aria-expanded="false" aria-label="Open menu / Abrir menú"><span></span><span></span></button></div></div></header>
 
-<div class="docs-layout">
+<div class="docs-layout container">
   <aside class="docs-side">
     <p class="kicker"><span lang="en">Documentation</span><span lang="es">Documentación</span></p>
     <nav>
@@ -87,7 +77,7 @@
     </nav>
   </aside>
 
-  <main class="docs-content">
+  <main id="main" class="docs-content">
     <p class="crumbs"><a href="/index.html"><span lang="en">Home</span><span lang="es">Inicio</span></a><span>/</span><a href="/docs/index.html">Docs</a><span>/</span><span lang="en">Anchoring on Base</span><span lang="es">Anclaje en Base</span></p>
     <p class="eyebrow"><span lang="en">Cryptographic integrity</span><span lang="es">Integridad criptográfica</span></p>
     <h1 lang="en">Anchoring on Base</h1>
@@ -147,6 +137,7 @@
     <h2 lang="es">El contrato en Base</h2>
     <p lang="en">The <code>AnchorRegistry</code> is deliberately minimal: roots live in events (cheap and permanently retrievable), only a sequence <code>count</code> is stored, a single authorized anchorer writes, and there is no proxy, no upgradeability, and no owner beyond key rotation. It is a transparency log, not an access-control system - the security comes from publication being irreversible, not from who may write.</p>
     <p lang="es">El <code>AnchorRegistry</code> es deliberadamente mínimo: las raíces viven en eventos (baratos y recuperables para siempre), solo se almacena un contador <code>count</code> de secuencia, escribe un único anchorer autorizado, y no hay proxy, ni actualizabilidad, ni dueño más allá de la rotación de claves. Es un registro de transparencia, no un sistema de control de acceso: la seguridad viene de que la publicación es irreversible, no de quién puede escribir.</p>
+    <div class="table-scroll">
     <table class="kv">
       <tr><td><span lang="en">Network</span><span lang="es">Red</span></td><td>Base mainnet <code>(chain id 8453)</code></td></tr>
       <tr><td><span lang="en">Contract</span><span lang="es">Contrato</span></td><td><code>0x866316ae68b297cc2b3ed2daaf3cabd4f5e39de1</code></td></tr>
@@ -154,11 +145,13 @@
       <tr><td><span lang="en">First anchor</span><span lang="es">Primer anclaje</span></td><td><a href="https://basescan.org/tx/0xfbb705b3f764d94aaf00d0d8b0db6f2fd9c5cccb38b67ca90c288fa411037917" target="_blank" rel="noopener">0xfbb705b3…037917</a> <span lang="en">(anchor #0, 11 leaves)</span><span lang="es">(anclaje n.º 0, 11 hojas)</span></td></tr>
       <tr><td><span lang="en">Cadence</span><span lang="es">Cadencia</span></td><td><span lang="en">one anchor every 12 hours, empty windows included</span><span lang="es">un anclaje cada 12 horas, ventanas vacías incluidas</span></td></tr>
     </table>
+    </div>
 
     <h3 lang="en">Deployments</h3>
     <h3 lang="es">Despliegues</h3>
     <p lang="en">The same contract runs in two environments. Production anchors real agreement history to Base mainnet; the testnet deployment on Base Sepolia is for integration and CI.</p>
     <p lang="es">El mismo contrato corre en dos ambientes. Producción ancla el historial de acuerdos real en Base mainnet; el despliegue de testnet en Base Sepolia es para integración y CI.</p>
+    <div class="table-scroll">
     <table class="kv">
       <tr>
         <td><span lang="en"><strong>Production</strong> — Base mainnet <code>(8453)</code></span><span lang="es"><strong>Producción</strong> — Base mainnet <code>(8453)</code></span></td>
@@ -169,9 +162,10 @@
         <td><code>0xb1cb4c8d26e2457705f0ffaa823019c2ba0c4fa2</code><br><a href="https://sepolia.basescan.org/address/0xb1cb4c8d26e2457705f0ffaa823019c2ba0c4fa2" target="_blank" rel="noopener">View on Sepolia Basescan &rarr;</a></td>
       </tr>
     </table>
+    </div>
     <div class="note">
-      <p lang="en"><strong>Deployment status.</strong> The <code>AnchorRegistry</code> is live and source-verified on Base mainnet at the address above, and the anchoring service publishes real Merkle roots there every window - the <a href="/index.html#how">live element on the homepage</a> reads the latest root straight from Base. This page shows the production address because there is now a production deployment behind it.</p>
-      <p lang="es"><strong>Estado de despliegue.</strong> El <code>AnchorRegistry</code> está en vivo y con su código verificado en Base mainnet en la dirección de arriba, y el servicio de anclaje publica raíces Merkle reales ahí en cada ventana: el <a href="/index.html#how">elemento en vivo del inicio</a> lee la última raíz directo de Base. Esta página muestra la dirección de producción porque ahora hay un despliegue de producción detrás.</p>
+      <p lang="en"><strong>Deployment status.</strong> The <code>AnchorRegistry</code> is live and source-verified on Base mainnet at the address above, and the anchoring service publishes real Merkle roots there every window - you can read the latest root straight from Base on the <a href="https://basescan.org/address/0x866316ae68b297cc2b3ed2daaf3cabd4f5e39de1" target="_blank" rel="noopener">contract on Basescan</a>. This page shows the production address because there is now a production deployment behind it.</p>
+      <p lang="es"><strong>Estado de despliegue.</strong> El <code>AnchorRegistry</code> está en vivo y con su código verificado en Base mainnet en la dirección de arriba, y el servicio de anclaje publica raíces Merkle reales ahí en cada ventana: puedes leer la última raíz directo de Base en el <a href="https://basescan.org/address/0x866316ae68b297cc2b3ed2daaf3cabd4f5e39de1" target="_blank" rel="noopener">contrato en Basescan</a>. Esta página muestra la dirección de producción porque ahora hay un despliegue de producción detrás.</p>
     </div>
 
     <h2 lang="en">Verify it yourself</h2>
@@ -186,53 +180,10 @@
   </main>
 </div>
 
-<footer class="footer">
-  <div class="wrap footer-cols">
-    <div>
-      <a class="brand" href="/index.html" aria-label="Pacta Protocol">
-        <svg viewBox="0 0 100 106" fill="none" stroke="currentColor" stroke-width="8.5" stroke-linecap="butt" stroke-linejoin="round" aria-hidden="true">
-          <path d="M31.5 21 V12 Q31.5 6 37.5 6 H86.5 Q92.5 6 92.5 12 V51 Q92.5 57 86.5 57 H77"/>
-          <path d="M58 57 H37.5 Q31.5 57 31.5 51 V33"/>
-          <path d="M11.5 27 H60.5 Q66.5 27 66.5 33 V72 Q66.5 78 60.5 78 H11.5 Q5.5 78 5.5 72 V33 Q5.5 27 11.5 27 Z"/>
-          <path d="M5.5 76 V102"/>
-        </svg>
-        <span class="wordmark">Pacta<br>Protocol</span>
-      </a>
-      <p class="tag" lang="en">Agreements that enforce themselves.</p>
-      <p class="tag" lang="es">Pactos que se cumplen por diseño.</p>
-    </div>
-    <div>
-      <h4 lang="en">Product</h4><h4 lang="es">Producto</h4>
-      <a href="https://app.pactaprotocol.org/" target="_blank" rel="noopener"><span lang="en">Try Pacta</span><span lang="es">Prueba Pacta</span></a>
-      <a href="/index.html#how"><span lang="en">How it works</span><span lang="es">Cómo funciona</span></a>
-      <a href="/index.html#registry"><span lang="en">Service registry</span><span lang="es">Registro de servicios</span></a>
-      <a href="/docs/cases.html"><span lang="en">Case studies</span><span lang="es">Casos</span></a>
-    </div>
-    <div>
-      <h4 lang="en">Build</h4><h4 lang="es">Construir</h4>
-      <a href="/docs/index.html"><span lang="en">Getting started</span><span lang="es">Primeros pasos</span></a>
-      <a href="/docs/mcp.html"><span lang="en">MCP integration</span><span lang="es">Integración MCP</span></a>
-      <a href="/docs/anchoring.html"><span lang="en">Anchoring on Base</span><span lang="es">Anclaje en Base</span></a>
-      <a href="/docs/settlement.html"><span lang="en">Settlement backends</span><span lang="es">Backends de liquidación</span></a>
-      <a href="/docs/faq.html">FAQ</a>
-      <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/ROADMAP.md" target="_blank" rel="noopener">Roadmap</a>
-    </div>
-    <div>
-      <h4 lang="en">Project</h4><h4 lang="es">Proyecto</h4>
-      <a href="mailto:hello@pactaprotocol.org"><span lang="en">Contact</span><span lang="es">Contacto</span></a>
-      <a href="/verify.html"><span lang="en">Verify a receipt</span><span lang="es">Verificar un recibo</span></a>
-      <a href="https://github.com/Pacta-Protocol" target="_blank" rel="noopener">GitHub</a>
-      <a lang="en" href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/docs/LITEPAPER.md" target="_blank" rel="noopener">Litepaper</a>
-      <a lang="es" href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/docs/LITEPAPER.es.md" target="_blank" rel="noopener">Litepaper</a>
-    </div>
-  </div>
-  <div class="wrap footer-base">
-    <span lang="en">© 2026 Pacta Protocol · Open source under the MIT License</span>
-    <span lang="es">© 2026 Pacta Protocol · Código abierto bajo licencia MIT</span>
-  </div>
-</footer>
-
-<script src="/assets/config.js"></script>
-<script src="/assets/site.js"></script>
+<footer class="site-footer"><div class="container"><div class="footer-main"><div class="footer-brand"><a class="brand" href="/" aria-label="Pacta Protocol, home"><svg class="brand-mark" viewBox="0 0 100 106" fill="none" stroke="currentColor" stroke-width="8.5" stroke-linecap="butt" stroke-linejoin="round" aria-hidden="true"><path d="M31.5 21 V12 Q31.5 6 37.5 6 H86.5 Q92.5 6 92.5 12 V51 Q92.5 57 86.5 57 H77"/><path d="M58 57 H37.5 Q31.5 57 31.5 51 V33"/><path d="M11.5 27 H60.5 Q66.5 27 66.5 33 V72 Q66.5 78 60.5 78 H11.5 Q5.5 78 5.5 72 V33 Q5.5 27 11.5 27 Z"/><path d="M5.5 76 V102"/></svg><span>pacta<span class="brand-sub">PROTOCOL</span></span></a><p><span lang="en">Open trust infrastructure.<br>For a more open economy.</span><span lang="es">Infraestructura de confianza abierta.<br>Para una economía más abierta.</span></p><span class="small-note"><span lang="en">Built from Costa Rica. Open to the world.</span><span lang="es">Desde Costa Rica. Abierto al mundo.</span></span></div>
+ <div><h3><span lang="en">Explore</span><span lang="es">Explora</span></h3><a href="/why/"><span lang="en">Why Pacta</span><span lang="es">Por qué Pacta</span></a><a href="/#how-it-works"><span lang="en">How it works</span><span lang="es">Cómo funciona</span></a><a href="https://app.pactaprotocol.org/"><span lang="en">Demo marketplace</span><span lang="es">Marketplace de demo</span></a><a href="/docs/cases.html"><span lang="en">Case studies</span><span lang="es">Casos de uso</span></a></div>
+ <div><h3><span lang="en">Build</span><span lang="es">Construye</span></h3><a href="/docs/index.html"><span lang="en">Documentation</span><span lang="es">Documentación</span></a><a href="/docs/mcp.html"><span lang="en">MCP integration</span><span lang="es">Integración MCP</span></a><a href="/verify.html"><span lang="en">Verify a receipt</span><span lang="es">Verificar un recibo</span></a><a href="https://github.com/Pacta-Protocol/Pacta.Protocol">GitHub <svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></div>
+ <div><h3><span lang="en">Project</span><span lang="es">Proyecto</span></h3><a href="/docs/impact.html"><span lang="en">Impact</span><span lang="es">Impacto</span></a><a href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/ROADMAP.md">Roadmap</a><a href="/#faq">FAQ</a><a href="/privacy.html"><span lang="en">Privacy</span><span lang="es">Privacidad</span></a></div></div>
+ <div class="footer-bottom"><span>© 2026 Pacta Protocol</span><span><span lang="en">Open source · MIT License</span><span lang="es">Código abierto · Licencia MIT</span></span><a href="#top"><span lang="en">Back to top</span><span lang="es">Volver arriba</span> ↑</a></div></div></footer>
 </body>
 </html>

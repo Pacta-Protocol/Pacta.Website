@@ -1,0 +1,225 @@
+/* pages.css — page-specific styling for the verifier (verify.html) and the
+   plain-text pages (privacy.html), layered on top of the design system in
+   styles.css. Owns nothing that styles.css already defines; only the extra
+   surfaces those two pages need. */
+
+:root {
+  --pass: var(--green);
+  --fail: #f0857a;
+  --skip: #e4ac57;
+}
+
+/* ── Shared narrow reading column ─────────────────────────────── */
+.page-main {
+  width: min(880px, calc(100% - 48px));
+  margin-inline: auto;
+  padding-block: 60px 104px;
+}
+.page-main .eyebrow { margin-bottom: 20px; }
+.page-main h1 {
+  font-family: var(--heading);
+  font-weight: 500;
+  font-size: clamp(2.1rem, 3.8vw, 3rem);
+  line-height: 1.12;
+  letter-spacing: -.045em;
+  margin-bottom: 22px;
+}
+.page-main .lede {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: #a2b1c8;
+  max-width: 68ch;
+}
+.page-main .lede strong { color: var(--text); font-weight: 600; }
+.page-main code {
+  font-family: var(--mono);
+  font-size: .85em;
+  color: #c7d6e8;
+  background: #ffffff0a;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 1px 6px;
+}
+.page-main a:not(.button) {
+  color: var(--cyan);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: #6bdaef55;
+}
+.page-main a:not(.button):hover { text-decoration-color: var(--cyan); }
+
+/* ── Verifier UI ──────────────────────────────────────────────── */
+.verify-in {
+  width: 100%;
+  min-height: 210px;
+  margin-top: 30px;
+  font-family: var(--mono);
+  font-size: .8125rem;
+  line-height: 1.6;
+  padding: 16px 17px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  resize: vertical;
+  transition: border-color .2s;
+}
+.verify-in:focus-visible {
+  outline: none;
+  border-color: #6bdaef66;
+}
+.verify-in::placeholder { color: #5c6c86; }
+
+.verify-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 18px 0 6px;
+}
+.verify-row .sep { color: #38465b; }
+.verify-row .row-label { font-size: .875rem; color: var(--muted); }
+
+.id-in {
+  font-family: var(--mono);
+  font-size: .875rem;
+  padding: 10px 13px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  width: 150px;
+  transition: border-color .2s;
+}
+.id-in:focus-visible { outline: none; border-color: #6bdaef66; }
+.id-in::placeholder { color: #5c6c86; }
+
+.verify-fineprint {
+  font-size: .8125rem;
+  line-height: 1.65;
+  color: #74839b;
+  margin-top: 4px;
+  max-width: 68ch;
+}
+
+/* Results */
+#out { margin-top: 26px; }
+.rseq {
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: .8125rem;
+  letter-spacing: .02em;
+  margin: 22px 0 8px;
+  color: #93a4bd;
+}
+.check {
+  padding: 11px 14px;
+  border-left: 3px solid #46566d;
+  border-radius: 0 6px 6px 0;
+  margin: 8px 0;
+  font-family: var(--mono);
+  font-size: .8125rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: #ffffff05;
+  color: #c2d0e4;
+}
+.check.PASS { border-left-color: var(--pass); }
+.check.FAIL { border-left-color: var(--fail); }
+.check.SKIP { border-left-color: var(--skip); }
+
+.verdict {
+  font-family: var(--heading);
+  font-weight: 650;
+  font-size: 1.375rem;
+  letter-spacing: -.025em;
+  margin: 20px 0 8px;
+}
+.verdict.pass { color: var(--pass); }
+.verdict.fail { color: var(--fail); }
+.verdict.partial { color: var(--skip); }
+
+.txlink {
+  display: inline-block;
+  margin-top: 8px;
+  font-family: var(--mono);
+  font-size: .8125rem;
+  color: var(--cyan);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Explanatory note block under the tool */
+.verify-note {
+  margin-top: 30px;
+  padding: 22px 24px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: linear-gradient(150deg, #0e1626, #0b111d);
+}
+.verify-note p {
+  font-size: .9375rem;
+  line-height: 1.8;
+  color: #8ba0ba;
+}
+.verify-note p + p { margin-top: 14px; }
+
+/* ── Plain-text pages (privacy) ───────────────────────────────── */
+.prose-page { width: min(760px, calc(100% - 48px)); margin-inline: auto; padding-block: 60px 104px; }
+.prose-page .eyebrow { margin-bottom: 20px; }
+.prose-page h1 {
+  font-family: var(--heading);
+  font-weight: 500;
+  font-size: clamp(2.1rem, 3.8vw, 3rem);
+  line-height: 1.12;
+  letter-spacing: -.045em;
+}
+.prose-page .eff {
+  font-family: var(--mono);
+  font-size: .8125rem;
+  letter-spacing: .04em;
+  color: #74839b;
+  margin-top: 12px;
+}
+.prose-page h2 {
+  font-size: 1.375rem;
+  letter-spacing: -.02em;
+  margin: 44px 0 14px;
+  color: var(--text);
+}
+.prose-page p {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #9aabc2;
+  margin-top: 14px;
+}
+.prose-page ul { margin: 14px 0 0; padding-left: 22px; }
+.prose-page li {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #9aabc2;
+  margin-top: 6px;
+}
+.prose-page code {
+  font-family: var(--mono);
+  font-size: .85em;
+  color: #c7d6e8;
+  background: #ffffff0a;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 1px 6px;
+}
+.prose-page a:not(.button) {
+  color: var(--cyan);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: #6bdaef55;
+}
+.prose-page a:not(.button):hover { text-decoration-color: var(--cyan); }
+
+@media (max-width: 640px) {
+  .page-main, .prose-page { width: calc(100% - 40px); padding-block: 44px 80px; }
+  .verify-row { gap: 9px; }
+  .id-in { width: 100%; }
+}
