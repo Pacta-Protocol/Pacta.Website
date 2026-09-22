@@ -1,10 +1,14 @@
 # Pacta — website
 
-Bilingual (EN/ES) website for **Pacta**, the trust layer of agentic commerce.
-Static HTML/CSS/JS — no build step, no dependencies.
+Bilingual (EN/ES) website for **Pacta Protocol** — the trust layer for AI that
+does real business. Static HTML/CSS/JS — no build step, no dependencies.
 
-The marketplace app and protocol reference implementation live in
-[Pacta-Protocol/pacta](https://github.com/Pacta-Protocol/pacta).
+Pacta is an open trust protocol for AI agents and real-world businesses. Its
+reference implementation — the marketplace explorer that exercises the full
+protocol lifecycle — lives in
+[Pacta-Protocol/pacta](https://github.com/Pacta-Protocol/pacta). Commercial
+products can be built on top of the protocol; [Avalta](https://avalta.ai)
+connects real businesses to the agentic economy, powered by Pacta.
 
 ## Run locally
 
