@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Anchoring on Base - Pacta Protocol Docs</title>
+  <title>Blockchain Anchoring - Pacta Protocol Docs</title>
   <meta name="description" content="Every 12 hours Pacta publishes one Merkle root of its agreement log to an AnchorRegistry contract on Base. This is what it proves - history integrity - and what it deliberately does not prove.">
   <link rel="canonical" href="https://pactaprotocol.org/docs/anchoring.html">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://pactaprotocol.org/docs/anchoring.html">
-  <meta property="og:title" content="Anchoring on Base - Pacta Protocol Docs">
+  <meta property="og:title" content="Blockchain Anchoring - Pacta Protocol Docs">
   <meta property="og:description" content="Every 12 hours Pacta publishes one Merkle root of its agreement log to an AnchorRegistry contract on Base. This is what it proves - history integrity - and what it deliberately does not prove.">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <meta name="color-scheme" content="dark">
@@ -23,7 +23,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://pactaprotocol.org/" },
       { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://pactaprotocol.org/docs/index.html" },
-      { "@type": "ListItem", "position": 3, "name": "Anchoring on Base", "item": "https://pactaprotocol.org/docs/anchoring.html" }
+      { "@type": "ListItem", "position": 3, "name": "Blockchain Anchoring", "item": "https://pactaprotocol.org/docs/anchoring.html" }
     ]
   }
   </script>
@@ -67,7 +67,7 @@
     <nav>
       <a href="/docs/index.html"><span lang="en">Getting started</span><span lang="es">Primeros pasos</span></a>
       <a href="/docs/mcp.html"><span lang="en">MCP integration</span><span lang="es">Integración MCP</span></a>
-      <a href="/docs/anchoring.html" aria-current="page"><span lang="en">Anchoring on Base</span><span lang="es">Anclaje en Base</span></a>
+      <a href="/docs/anchoring.html" aria-current="page"><span lang="en">Blockchain anchoring</span><span lang="es">Anclaje en blockchain</span></a>
       <a href="/docs/settlement.html"><span lang="en">Settlement backends</span><span lang="es">Backends de liquidación</span></a>
       <a href="/docs/vetting.html"><span lang="en">Vetting game theory</span><span lang="es">Teoría de juegos</span></a>
       <a href="/docs/impact.html"><span lang="en">Impact</span><span lang="es">Impacto</span></a>
@@ -78,12 +78,12 @@
   </aside>
 
   <main id="main" class="docs-content">
-    <p class="crumbs"><a href="/index.html"><span lang="en">Home</span><span lang="es">Inicio</span></a><span>/</span><a href="/docs/index.html">Docs</a><span>/</span><span lang="en">Anchoring on Base</span><span lang="es">Anclaje en Base</span></p>
+    <p class="crumbs"><a href="/index.html"><span lang="en">Home</span><span lang="es">Inicio</span></a><span>/</span><a href="/docs/index.html">Docs</a><span>/</span><span lang="en">Blockchain anchoring</span><span lang="es">Anclaje en blockchain</span></p>
     <p class="eyebrow"><span lang="en">Cryptographic integrity</span><span lang="es">Integridad criptográfica</span></p>
-    <h1 lang="en">Anchoring on Base</h1>
-    <h1 lang="es">Anclaje en Base</h1>
-    <p class="lede" lang="en">Every 12 hours Pacta publishes a single Merkle root of its agreement log to an <code>AnchorRegistry</code> contract on Base. Once a root is on-chain, no one - not even Pacta - can rewrite a signed agreement, rating, or ruling without it being mathematically detectable by anyone holding a receipt. This is the Certificate Transparency pattern applied to agreements.</p>
-    <p class="lede" lang="es">Cada 12 horas Pacta publica una única raíz Merkle de su registro de acuerdos en un contrato <code>AnchorRegistry</code> en Base. Una vez que la raíz está on-chain, nadie -ni siquiera Pacta- puede reescribir un acuerdo firmado, una calificación o un fallo sin que sea matemáticamente detectable por cualquiera que tenga un recibo. Es el patrón de Certificate Transparency aplicado a los acuerdos.</p>
+    <h1 lang="en">Blockchain anchoring</h1>
+    <h1 lang="es">Anclaje en blockchain</h1>
+    <p class="lede" lang="en">Every 12 hours Pacta publishes a single Merkle root of its agreement log to an <code>AnchorRegistry</code> contract on a public blockchain - Base is the current reference deployment. Once a root is on-chain, no one - not even Pacta - can rewrite a signed agreement, rating, or ruling without it being mathematically detectable by anyone holding a receipt. This is the Certificate Transparency pattern applied to agreements.</p>
+    <p class="lede" lang="es">Cada 12 horas Pacta publica una única raíz Merkle de su registro de acuerdos en un contrato <code>AnchorRegistry</code> en una blockchain pública; Base es el despliegue de referencia actual. Una vez que la raíz está on-chain, nadie -ni siquiera Pacta- puede reescribir un acuerdo firmado, una calificación o un fallo sin que sea matemáticamente detectable por cualquiera que tenga un recibo. Es el patrón de Certificate Transparency aplicado a los acuerdos.</p>
 
     <h2 lang="en">How a window becomes an anchor</h2>
     <h2 lang="es">Cómo una ventana se convierte en anclaje</h2>
@@ -91,10 +91,10 @@
       <div class="stepbox"><span class="n">01</span><h4><span lang="en">Signed events</span><span lang="es">Eventos firmados</span></h4><p><span lang="en">Every lifecycle action appends one entry to a hash-chained log.</span><span lang="es">Cada acción del ciclo de vida añade una entrada a un registro encadenado por hash.</span></p></div>
       <div class="stepbox"><span class="n">02</span><h4><span lang="en">12h window</span><span lang="es">Ventana de 12h</span></h4><p><span lang="en">Entries in <code>(start, end]</code> are collected in <code>seq</code> order.</span><span lang="es">Las entradas en <code>(inicio, fin]</code> se recogen en orden <code>seq</code>.</span></p></div>
       <div class="stepbox"><span class="n">03</span><h4><span lang="en">Merkle root</span><span lang="es">Raíz Merkle</span></h4><p><span lang="en">One domain-separated SHA-256 root summarizes the whole window.</span><span lang="es">Una raíz SHA-256 con separación de dominio resume toda la ventana.</span></p></div>
-      <div class="stepbox"><span class="n">04</span><h4><span lang="en">Published to Base</span><span lang="es">Publicada en Base</span></h4><p><span lang="en"><code>RootAnchored</code> is emitted on-chain - permanent and public.</span><span lang="es">Se emite <code>RootAnchored</code> on-chain: permanente y público.</span></p></div>
+      <div class="stepbox"><span class="n">04</span><h4><span lang="en">Published on-chain</span><span lang="es">Publicada on-chain</span></h4><p><span lang="en"><code>RootAnchored</code> is emitted on-chain - permanent and public.</span><span lang="es">Se emite <code>RootAnchored</code> on-chain: permanente y público.</span></p></div>
     </div>
-    <p lang="en">Each party keeps signed receipts that include the Merkle path from their entry up to a published root. Anyone can recompute that path and check it against the root Base recorded. If a single byte of any covered entry ever changed, the recomputed root would no longer match the on-chain one - the tamper is provable without Pacta's cooperation.</p>
-    <p lang="es">Cada parte guarda recibos firmados que incluyen la ruta Merkle desde su entrada hasta una raíz publicada. Cualquiera puede recomputar esa ruta y compararla con la raíz que Base registró. Si un solo byte de cualquier entrada cubierta cambiara, la raíz recomputada ya no coincidiría con la on-chain: la alteración es demostrable sin la cooperación de Pacta.</p>
+    <p lang="en">Each party keeps signed receipts that include the Merkle path from their entry up to a published root. Anyone can recompute that path and check it against the root recorded on-chain. If a single byte of any covered entry ever changed, the recomputed root would no longer match the on-chain one - the tamper is provable without Pacta's cooperation.</p>
+    <p lang="es">Cada parte guarda recibos firmados que incluyen la ruta Merkle desde su entrada hasta una raíz publicada. Cualquiera puede recomputar esa ruta y compararla con la raíz registrada on-chain. Si un solo byte de cualquier entrada cubierta cambiara, la raíz recomputada ya no coincidiría con la on-chain: la alteración es demostrable sin la cooperación de Pacta.</p>
 
     <h2 lang="en">What it proves - and what it does not</h2>
     <h2 lang="es">Qué prueba - y qué no</h2>
@@ -133,10 +133,10 @@
     <p lang="en">The on-chain event is <code>RootAnchored(uint256 sequence, bytes32 root, uint64 windowStart, uint64 windowEnd, uint32 leafCount)</code>; <code>sequence</code> and <code>root</code> are indexed. A proof is an array of <code>{ hash, pos }</code> siblings walked leaf&rarr;root: start the accumulator at <code>SHA-256(0x00 || entry_hash)</code>, then fold in each sibling with <code>SHA-256(0x01 || &hellip;)</code>, left or right per <code>pos</code>. Two independent implementations are published - the marketplace's <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/src/merkle.js" target="_blank" rel="noopener">src/merkle.js</a> and the dependency-free <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/tree/main/packages/verifier" target="_blank" rel="noopener">verifier</a>.</p>
     <p lang="es">El evento on-chain es <code>RootAnchored(uint256 sequence, bytes32 root, uint64 windowStart, uint64 windowEnd, uint32 leafCount)</code>; <code>sequence</code> y <code>root</code> están indexados. Una prueba es un arreglo de hermanos <code>{ hash, pos }</code> recorridos de hoja&rarr;raíz: se parte del acumulador en <code>SHA-256(0x00 || entry_hash)</code> y se combina cada hermano con <code>SHA-256(0x01 || &hellip;)</code>, a izquierda o derecha según <code>pos</code>. Hay dos implementaciones independientes publicadas: <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/src/merkle.js" target="_blank" rel="noopener">src/merkle.js</a> del marketplace y el <a href="https://github.com/Pacta-Protocol/Pacta.Protocol/tree/main/packages/verifier" target="_blank" rel="noopener">verificador</a> sin dependencias.</p>
 
-    <h2 lang="en">The contract on Base</h2>
-    <h2 lang="es">El contrato en Base</h2>
-    <p lang="en">The <code>AnchorRegistry</code> is deliberately minimal: roots live in events (cheap and permanently retrievable), only a sequence <code>count</code> is stored, a single authorized anchorer writes, and there is no proxy, no upgradeability, and no owner beyond key rotation. It is a transparency log, not an access-control system - the security comes from publication being irreversible, not from who may write.</p>
-    <p lang="es">El <code>AnchorRegistry</code> es deliberadamente mínimo: las raíces viven en eventos (baratos y recuperables para siempre), solo se almacena un contador <code>count</code> de secuencia, escribe un único anchorer autorizado, y no hay proxy, ni actualizabilidad, ni dueño más allá de la rotación de claves. Es un registro de transparencia, no un sistema de control de acceso: la seguridad viene de que la publicación es irreversible, no de quién puede escribir.</p>
+    <h2 lang="en">The reference contract on Base</h2>
+    <h2 lang="es">El contrato de referencia en Base</h2>
+    <p lang="en">The <code>AnchorRegistry</code> is deliberately minimal: roots live in events (cheap and permanently retrievable), only a sequence <code>count</code> is stored, a single authorized anchorer writes, and there is no proxy, no upgradeability, and no owner beyond key rotation. It is a transparency log, not an access-control system - the security comes from publication being irreversible, not from who may write. Nothing in this design is Base-specific: any public, append-only chain can host the same transparency-log contract, and Base is simply the current reference deployment.</p>
+    <p lang="es">El <code>AnchorRegistry</code> es deliberadamente mínimo: las raíces viven en eventos (baratos y recuperables para siempre), solo se almacena un contador <code>count</code> de secuencia, escribe un único anchorer autorizado, y no hay proxy, ni actualizabilidad, ni dueño más allá de la rotación de claves. Es un registro de transparencia, no un sistema de control de acceso: la seguridad viene de que la publicación es irreversible, no de quién puede escribir. Nada de este diseño es específico de Base: cualquier cadena pública y de solo-anexado puede alojar el mismo contrato de registro de transparencia, y Base es simplemente el despliegue de referencia actual.</p>
     <div class="table-scroll">
     <table class="kv">
       <tr><td><span lang="en">Network</span><span lang="es">Red</span></td><td>Base mainnet <code>(chain id 8453)</code></td></tr>
@@ -181,7 +181,7 @@
 </div>
 
 <footer class="site-footer"><div class="container"><div class="footer-main"><div class="footer-brand"><a class="brand" href="/" aria-label="Pacta Protocol, home"><svg class="brand-mark" viewBox="0 0 100 106" fill="none" stroke="currentColor" stroke-width="8.5" stroke-linecap="butt" stroke-linejoin="round" aria-hidden="true"><path d="M31.5 21 V12 Q31.5 6 37.5 6 H86.5 Q92.5 6 92.5 12 V51 Q92.5 57 86.5 57 H77"/><path d="M58 57 H37.5 Q31.5 57 31.5 51 V33"/><path d="M11.5 27 H60.5 Q66.5 27 66.5 33 V72 Q66.5 78 60.5 78 H11.5 Q5.5 78 5.5 72 V33 Q5.5 27 11.5 27 Z"/><path d="M5.5 76 V102"/></svg><span>pacta<span class="brand-sub">PROTOCOL</span></span></a><p><span lang="en">Open trust infrastructure.<br>For a more open economy.</span><span lang="es">Infraestructura de confianza abierta.<br>Para una economía más abierta.</span></p><span class="small-note"><span lang="en">Built from Costa Rica. Open to the world.</span><span lang="es">Desde Costa Rica. Abierto al mundo.</span></span></div>
- <div><h3><span lang="en">Explore</span><span lang="es">Explora</span></h3><a href="/why/"><span lang="en">Why Pacta</span><span lang="es">Por qué Pacta</span></a><a href="/#how-it-works"><span lang="en">How it works</span><span lang="es">Cómo funciona</span></a><a href="https://app.pactaprotocol.org/" target="_blank" rel="noopener"><span lang="en">Demo marketplace</span><span lang="es">Marketplace de demo</span></a><a href="/docs/cases.html"><span lang="en">Case studies</span><span lang="es">Casos de uso</span></a></div>
+ <div><h3><span lang="en">Explore</span><span lang="es">Explora</span></h3><a href="/why/"><span lang="en">Why Pacta</span><span lang="es">Por qué Pacta</span></a><a href="/#how-it-works"><span lang="en">How it works</span><span lang="es">Cómo funciona</span></a><a href="https://app.pactaprotocol.org/" target="_blank" rel="noopener"><span lang="en">Protocol demo</span><span lang="es">Demo del protocolo</span></a><a href="/docs/cases.html"><span lang="en">Case studies</span><span lang="es">Casos de uso</span></a></div>
  <div><h3><span lang="en">Build</span><span lang="es">Construye</span></h3><a href="/docs/index.html"><span lang="en">Documentation</span><span lang="es">Documentación</span></a><a href="/docs/mcp.html"><span lang="en">MCP integration</span><span lang="es">Integración MCP</span></a><a href="/verify.html"><span lang="en">Verify a receipt</span><span lang="es">Verificar un recibo</span></a><a href="https://github.com/Pacta-Protocol/Pacta.Protocol" target="_blank" rel="noopener">GitHub <svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></div>
  <div><h3><span lang="en">Project</span><span lang="es">Proyecto</span></h3><a href="/docs/impact.html"><span lang="en">Impact</span><span lang="es">Impacto</span></a><a href="https://github.com/Pacta-Protocol/Pacta.Protocol/blob/main/ROADMAP.md" target="_blank" rel="noopener">Roadmap</a><a href="/#faq">FAQ</a><a href="/privacy.html"><span lang="en">Privacy</span><span lang="es">Privacidad</span></a></div></div>
  <div class="footer-bottom"><span>© 2026 Pacta Protocol</span><span><span lang="en">Open source · MIT License</span><span lang="es">Código abierto · Licencia MIT</span></span><a href="#top"><span lang="en">Back to top</span><span lang="es">Volver arriba</span> ↑</a></div></div></footer>

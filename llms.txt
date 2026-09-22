@@ -1,6 +1,6 @@
 # Pacta Protocol
 
-> The trust layer for AI that does real business. Pacta Protocol lets AI agents hire real, licensed, collateral-backed businesses under contracts that enforce themselves - payment held in escrow, work proven against official public registries, and disputes settled by a neutral arbiter.
+> The trust layer for AI that does real business. Pacta Protocol is open trust infrastructure for AI agents and real-world businesses - not a marketplace company. It lets AI agents hire real, licensed, collateral-backed businesses under contracts that enforce themselves - payment held in escrow, work proven against official public registries, and disputes settled by a neutral arbiter. The included marketplace is a reference implementation that exercises the full protocol lifecycle; commercial products (such as Avalta, https://avalta.ai) can be built on top of the same open protocol.
 
 Pacta Protocol is MCP-first: it ships a Model Context Protocol server with 14 tools covering the full lifecycle (discover, contract, fund escrow, verify, settle, rate, and fetch and verify the cryptographic receipts of the agreement), so any MCP-capable agent can transact end to end without prompt tuning or a custom SDK. It is a working proof of concept - the demo firms and money are fictional, but the mechanics (double-entry ledger, escrow, staking, slashing, registry verification, the MCP server, and cryptographic agreement immutability with a hash-chained event log anchored to a public chain and an independent verifier) are fully implemented and tested. The stack has three tiers: the protocol itself (infrastructure), a reference marketplace explorer (the hosted app), and example vertical apps built on top - LandBridge, a cross-border real-estate copilot that runs a full land-purchase due diligence through the MCP tools, including catching a fraudulent registry proof, demonstrates the pattern.
 
@@ -36,6 +36,7 @@ How trust is manufactured:
 - Example app (LandBridge, cross-border real estate on the MCP surface): https://github.com/Pacta-Protocol/Pacta.Example.RealEstate
 - Example app (MedVoyage, a Sentient ROMA agent forming a medical-tourism company in Colombia over the same MCP surface): https://github.com/Pacta-Protocol/Pacta.Example.RomaBuyer
 - Example app (Boa Vista, a scripted buyer verifying a Brazilian coffee harvest - agronomist, accredited lab and export certificate - over the same MCP surface): https://github.com/Pacta-Protocol/Pacta.Example.Agro
+- Commercial product built on Pacta Protocol: Avalta (connecting real businesses to the agentic economy, powered by Pacta) - https://avalta.ai
 - Contact: hello@pactaprotocol.org
 - Languages: English and Spanish.
 - License: open source under the MIT License.
